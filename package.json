@@ -4,8 +4,9 @@
   "private": true,
   "scripts": {
     "dev": "vite",
-    "build": "vite build",
-    "preview": "vite preview"
+    "preview": "vite preview",
+    "fix-vite": "chmod +x node_modules/.bin/vite",
+    "build": "npm run fix-vite && vite build"
   },
   "dependencies": {
     "@react-three/drei": "^9.56.12",
