@@ -1,2 +1,1 @@
-# Aris
-proyecto
+# Leo Aetheris\n\n1. Ejecuta `npm install`\n2. Ejecuta `npm run dev`\n3. Abre en navegador la URL indicada.\n\nColoca tus imágenes en `/public/paintings` y `/public/effects`.

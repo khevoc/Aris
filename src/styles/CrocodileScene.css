@@ -1,0 +1,249 @@
+/* ------------------------------------------------------
+   LAYOUT BASE
+------------------------------------------------------ */
+.crocodile-root {
+  width: 100%;
+  min-height: 100vh;
+  background: #0a0a0a;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  padding: 40px 0;
+  font-family: "Times New Roman", serif;
+  color: #e9e9e9;
+}
+
+/* Canvas */
+.canvas-box {
+  width: 90%;
+  max-width: 800px;
+  aspect-ratio: 1.3;
+  border-radius: 12px;
+  overflow: hidden;
+  background: #000;
+  box-shadow:
+    0 0 40px rgba(255, 255, 255, 0.05),
+    0 0 80px rgba(255, 255, 255, 0.03) inset;
+  position: relative;
+}
+
+/* ------------------------------------------------------
+   BOTÓN DE AUDIO
+------------------------------------------------------ */
+.audio-btn {
+  margin-bottom: 24px;
+  padding: 10px 22px;
+  background: #111;
+  border: 1px solid rgba(255, 255, 255, 0.25);
+  border-radius: 6px;
+  color: #e2e2e2;
+  cursor: pointer;
+  font-size: 16px;
+  transition: 0.25s ease;
+}
+
+.audio-btn:hover {
+  background: #1b1b1b;
+  border-color: #fff;
+  transform: translateY(-2px);
+}
+
+/* ------------------------------------------------------
+   TEXTO - ESTILO DE CATÁLOGO DE ARTE
+------------------------------------------------------ */
+.art-description {
+  width: 90%;
+  max-width: 850px;
+  margin-top: 40px;
+  padding-top: 40px;
+  border-top: 1px solid rgba(255, 255, 255, 0.1);
+  text-align: left;
+}
+
+.art-description h2 {
+  font-size: 42px;
+  font-weight: 400;
+  margin: 0;
+  letter-spacing: 1px;
+}
+
+.art-description h2 span {
+  color: #aaa;
+  font-size: 28px;
+}
+
+.medium {
+  margin-top: 10px;
+  font-size: 20px;
+  color: #c6c6c6;
+}
+
+.desc-text {
+  margin-top: 20px;
+  font-size: 18px;
+  line-height: 1.6;
+  color: #d0d0d0;
+}
+
+/* ------------------------------------------------------
+   SPARKLE EFFECT — PARA LAS GAFAS
+------------------------------------------------------ */
+
+.sparkle {
+  position: absolute;
+  width: 12px;
+  height: 12px;
+  background: radial-gradient(circle, white 0%, transparent 70%);
+  border-radius: 50%;
+  pointer-events: none;
+  mix-blend-mode: screen;
+  opacity: 0;
+  animation: sparkleAnim 1.2s ease-out infinite;
+}
+
+/* Botón fijo dentro del canvas */
+.ambient-btn-overlay {
+  position: absolute;
+  top: 12px;
+  right: 18px;
+  z-index: 20;
+}
+
+.ambient-btn-overlay button {
+  background: rgba(0,0,0,0.65);
+  padding: 8px 14px;
+  border-radius: 8px;
+  border: 1px solid #555;
+  color: white;
+  cursor: pointer;
+  font-size: 14px;
+  backdrop-filter: blur(4px);
+}
+
+/* Texto más grande y visible */
+.improved-text {
+  color: #f0f0f0;
+  font-size: 1.2rem;
+  padding-top: 40px;
+  max-width: 900px;
+}
+
+.improved-text h2 {
+  font-size: 2.2rem;
+  margin-bottom: 10px;
+  font-family: "Times New Roman", serif;
+}
+
+.improved-text .medium {
+  font-size: 1.1rem;
+  opacity: 0.8;
+  margin-bottom: 15px;
+}
+
+.improved-text .desc-text {
+  font-size: 1.15rem;
+  line-height: 1.6;
+}
+
+
+@keyframes sparkleAnim {
+  0% {
+    opacity: 0;
+    transform: scale(0.2);
+  }
+  10% {
+    opacity: 1;
+    transform: scale(1);
+  }
+  40% {
+    opacity: 0.4;
+    transform: scale(0.6);
+  }
+  100% {
+    opacity: 0;
+    transform: scale(0);
+  }
+}
+
+.crocodile-wrapper {
+  width: 100%;
+  height: 100vh;
+  background: radial-gradient(
+      circle at 30% 50%,
+      rgba(40, 40, 55, 0.9),
+      rgba(10, 10, 15, 1)
+  );
+  position: relative;
+  overflow: hidden;
+  backdrop-filter: blur(10px);
+}
+
+/* ✨ Sparkle premium particles */
+.crocodile-wrapper::before {
+  content: "";
+  position: absolute;
+  inset: 0;
+  background-image: url("https://raw.githubusercontent.com/JulianCataldo/magic-sparkles/main/sparkle.png");
+  background-size: 300px;
+  opacity: 0.2;
+  mix-blend-mode: screen;
+  animation: sparkleMove 20s linear infinite;
+  pointer-events: none;
+  filter: drop-shadow(0 0 6px rgba(255,255,255,0.5));
+}
+
+@keyframes sparkleMove {
+  from {
+    transform: translate3d(-50px, -30px, 0) scale(1.1);
+  }
+  to {
+    transform: translate3d(50px, 30px, 0) scale(1.2);
+  }
+}
+
+/* ✨ Luces laterales suaves */
+.crocodile-wrapper::after {
+  content: "";
+  position: absolute;
+  width: 70%;
+  height: 70%;
+  top: 15%;
+  left: 15%;
+  background: radial-gradient(
+    circle,
+    rgba(255,255,255,0.07) 0%,
+    rgba(0,0,0,0) 70%
+  );
+  filter: blur(40px);
+  pointer-events: none;
+}
+
+/* ------------------------------------------------------
+   RESPONSIVE DESIGN
+------------------------------------------------------ */
+@media (max-width: 600px) {
+  .crocodile-root {
+    padding: 20px 0;
+  }
+
+  .canvas-box {
+    width: 95%;
+    aspect-ratio: 1.2;
+  }
+
+  .art-description h2 {
+    font-size: 32px;
+  }
+
+  .art-description h2 span {
+    font-size: 20px;
+  }
+
+  .medium {
+    font-size: 16px;
+  }
+
+  .desc-text {
+    font-size: 16px;
+  }
+}
