@@ -218,6 +218,55 @@
   pointer-events: none;
 }
 
+.background-flock {
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  opacity: 0.45;
+  z-index: -3;
+}
+
+.bird-layer {
+  pointer-events: none;
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  z-index: -1;
+}
+
+.palm,
+.palm-leaf {
+  transform-style: preserve-3d;
+  backface-visibility: hidden;
+  overflow: visible !important;
+}
+.palm {
+  position: absolute;
+  bottom: 0;
+  left: 50%;
+  width: 260px;
+  transform: translateX(-50%) rotateX(180deg);
+  transform-origin: center;
+  overflow: visible;
+  animation: palmMotion 4s ease-in-out infinite alternate;
+}
+
+.palm-leaf {
+  position: absolute;
+  bottom: 0;
+  left: 50%;
+  width: 180px;
+  transform: translateX(-50%) rotateX(180deg);
+  transform-origin: center;
+  overflow: visible;
+  animation: leafMotion 3s ease-in-out infinite alternate;
+}
+
 /* ------------------------------------------------------
    RESPONSIVE DESIGN
 ------------------------------------------------------ */

@@ -11,7 +11,7 @@ export default function App() {
     <BrowserRouter>
       <Routes>
         <Route path="/" element={<Gallery />} />
-        <Route path="/crocodile-experience" element={<CrocodileExperience />} />
+        <Route path="/croco-experience" element={<CrocodileExperience />} />
       </Routes>
     </BrowserRouter>
   )
