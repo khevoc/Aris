@@ -19,6 +19,7 @@ const ARTWORKS = [
     image: "/paintings/night_vision.jpg",
     effects: ["/effects/leaves.png", "/effects/smoke.png"],
     description: "Acrylic on Wood Panel — 2024",
+    link: "/mockup",
   },
   {
     id: 3,
@@ -27,7 +28,7 @@ const ARTWORKS = [
     image: "/paintings/crocodile.jpg",
     effects: ["/effects/water.png", "/effects/splash.png"],
     description: "Experiencia interactiva — 2025",
-    link: "/crocodile-experience",
+    link: "/croco-experience",
   },
 ];
 

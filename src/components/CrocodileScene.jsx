@@ -1,7 +1,8 @@
 // src/components/CrocodileScene.jsx
 import React, { useEffect, useRef, useState } from "react";
 import { Canvas, useLoader, useFrame } from "@react-three/fiber";
-import { OrbitControls } from "@react-three/drei";
+import { useNavigate } from "react-router-dom";
+import { OrbitControls, Html } from "@react-three/drei";
 import { useMemo } from "react";
 import * as THREE from "three";
 import "../styles/CrocodileScene.css";
@@ -16,9 +17,7 @@ import palm2Img from "../assets/palm-2.png";
 import palmTImg from "../assets/palm-t.png";
 import palmSImg from "../assets/palm-s.png";
 import palmCImg from "../assets/palm-c.png";
-
-import birdImg from "../assets/bird.gif";
-import flockImg from "../assets/flock.png";
+import birdImg from "../assets/bird2.gif";
 
 const VIDEO_SRC = "/bg-video.mp4";
 const AMBIENT_AUDIO = "/sounds/ocean-waves.mp3";
@@ -50,8 +49,6 @@ function VideoPainting() {
       video.play();
       const texture = new THREE.VideoTexture(video);
       texture.encoding = THREE.sRGBEncoding;
-      texture.minFilter = THREE.LinearFilter;
-      texture.magFilter = THREE.LinearFilter;
       texture.repeat.x = -1;   // invierte horizontal
       texture.offset.x = 1;
       texture.generateMipmaps = false;
@@ -98,12 +95,30 @@ function perlin(x, y) {
     }
   };
 
-  const perm = new Array(512).fill(0).map((_, i) => (i & 255));
+  const perm = new Uint8Array([
+  151,160,137,91,90,15,131,13,201,95,96,53,194,233,7,225,140,36,103,30,69,142,
+  8,99,37,240,21,10,23,190, 6,148,247,120,234,75,0,26,197,62,94,252,219,203,
+  117,35,11,32,57,177,33,88,237,149,56,87,174,20,125,136,171,168, 68,175,74,
+  165,71,134,139,48,27,166,77,146,158,231,83,111,229,122,60,211,133,230,220,
+  105,92,41,55,46,245,40,244,102,143,54, 65,25,63,161,1,216,80,73,209,76,132,
+  187,208,89,18,169,200,196,135,130,116,188,159,86,164,100,109,198,173,186,
+  3,64,52,217,226,250,124,123,5,202,38,147,118,126,255,82,85,212,207,206,
+  59,227,47,16,58,17,182,189,28,42,223,183,170,213,119,248,152, 2,44,154,
+  163,70,221,153,101,155,167, 43,172,9,129,22,39,253, 19,98,108,110,79,113,
+  224,232,178,185, 112,104,218,246,97,228,251,34,242,193,238,210,144,12,191,
+  179,162,241, 81,51,145,235,249,14,239,107,49,192,214, 31,181,199,106,157,
+  184, 84,204,176,115,121,50,45,127, 4,150,254,138,236,205,93,222,114,67,
+  29,24,72,243,141,128,195,78,66,215,61,156,180
+]);
 
-  const aa = perm[X + perm[Y]];
-  const ab = perm[X + perm[Y + 1]];
-  const ba = perm[X + 1 + perm[Y]];
-  const bb = perm[X + 1 + perm[Y + 1]];
+  // duplicado
+  const p = new Uint8Array(512);
+  for (let i = 0; i < 512; i++) p[i] = perm[i & 255];
+
+  const aa = p[X + p[Y]];
+  const ab = p[X + p[Y + 1]];
+  const ba = p[X + 1 + p[Y]];
+  const bb = p[X + 1 + p[Y + 1]];
 
   return lerp(
     lerp(grad(aa, xf, yf), grad(ba, xf - 1, yf), fade(xf)),
@@ -128,6 +143,11 @@ function fbm(x, y, octaves = 5) {
 /* BASE COCODRILO */
 function CrocodileBase() {
   const tex = useLoader(THREE.TextureLoader, crocImg);
+  useEffect(() => {
+    tex.encoding = THREE.sRGBEncoding; // ✔ colores reales
+    tex.colorSpace = THREE.SRGBColorSpace; // ✔ recomendado desde Three r152+
+    tex.needsUpdate = true;
+  }, [tex]);
 
   return (
     <mesh position={[0, 0, 0.25]} scale={[PAINTING_W, PAINTING_H, 1]}>
@@ -137,54 +157,79 @@ function CrocodileBase() {
   );
 }
 
-function SeagullFlock({ src }) {
+/* -------------------------------------------------------- */
+/*  SeagullFlock — versión estable para GIF tipo spritesheet */
+/* -------------------------------------------------------- */
+
+function SeagullFlock({
+  src = birdImg,
+  count = 4,
+  y = 1.1,
+  scale = 0.25,
+  z = -0.5,
+  startX = -5,
+  endX = 12
+}) {
   return (
-    <>
-      <Seagull src={src} baseY={1.4} speed={0.45} delay={0} />
-      <Seagull src={src} baseY={1.65} speed={0.52} delay={1.2} />
-      <Seagull src={src} baseY={1.25} speed={0.48} delay={2.1} />
-    </>
+    <group renderOrder={10}>
+      {Array.from({ length: count }).map((_, i) => (
+        <SingleSeagull
+          key={i}
+          src={src}
+          baseY={y + i * 0.15}
+          scale={scale}
+          startX={startX}
+          transparent
+          endX={endX}
+          speed={0.015 + i * 0.05}
+          delay={i * 0.3}
+          z={z}
+        />
+      ))}
+    </group>
   );
 }
 
-  /* AVES */
-  function Seagull({ src, baseY=1.4, speed=0.08, delay=8, startX=-4, endX=4 }) {
-  const tex = useLoader(THREE.TextureLoader, src);
-  const ref = useRef();
+/* -------------------------------------------------------- */
+/*  SingleSeagull — GIF animado + movimiento                */
+/* -------------------------------------------------------- */
 
-  useEffect(() => {
-    tex.encoding = THREE.sRGBEncoding;
-    tex.flipY = false;
-  }, [tex]);
+function SingleSeagull({ src, baseY, scale, startX, endX, delay, speed, z }) {
+  const ref = React.useRef();
 
+  const texture = useLoader(THREE.TextureLoader, src);
+  texture.encoding = THREE.sRGBEncoding;
+  texture.flipY = false;
+
+  // Movimiento horizontal + ondulación
   useFrame(({ clock }) => {
-  const t = clock.getElapsedTime() + delay;
+    const t = clock.getElapsedTime() * speed + delay;
+    const x = startX + ((endX - startX) * (t % 1));
+    const y = baseY + Math.sin(t * 4) * 0.05;
 
-  const f = (t * speed) % 1;
-
-  const x = startX + f * (endX - startX);
-  const y = baseY + Math.sin(t * 2) * 0.15;
-  const z = -1.4 + Math.sin(t * 0.3) * 0.15;  // MÁS ADELANTE
-
-  ref.current.position.set(x, y, z);
-  ref.current.rotation.z = Math.sin(t * 4) * 0.12;
-});
+    ref.current.position.set(x, y, z);
+  });
 
   return (
-    <mesh ref={ref} scale={[-1, -1, 1]}>
+    <mesh ref={ref} scale={[scale, scale, scale]} renderOrder={2}>
       <planeGeometry args={[1, 1]} />
-      <meshStandardMaterial
-        map={tex}
+      <meshBasicMaterial
+        map={texture}
         transparent
+        alphaTest={0.01}
+        depthWrite={false}
+        depthTest={true}
         side={THREE.DoubleSide}
-        emissive="#ffffff"
-        emissiveIntensity={0.2}
-        metalness={0.2}
-        roughness={0.85}
+        roughness={0.25}
+        colorSpace={THREE.NoColorSpace}
+        frustumCulled={false}
       />
     </mesh>
   );
 }
+
+
+
 
 
 
@@ -497,7 +542,7 @@ function PalmFront({ src, uv, scale, extraZ=0 }) {
   });
 
   return (
-    <mesh ref={ref} position={[posX, posY, posZ]} scale={[scale, -scale, 1]}>
+    <mesh ref={ref} position={[posX, posY, posZ]} scale={[scale, scale, 1]}>
       <planeGeometry args={[1, 1]} />
       <meshStandardMaterial
         map={tex}
@@ -578,7 +623,7 @@ function PalmLeaf({ src, uv, scale, extraZ = 0 }) {
       <mesh
         ref={ref}
         position={[baseX + offsetX, baseY + offsetY, baseZ]}
-        scale={[-scale, -scale, 1]}
+        scale={[-scale, scale, 1]}
       >
         <planeGeometry args={[1, 1]} />
         <meshStandardMaterial
@@ -645,6 +690,10 @@ export default function CrocodileScene({
   const audioRef = useRef(null);
   const [audioOn, setAudioOn] = useState(false);
 
+  const [showModal, setShowModal] = useState(false);
+  const [zoom, setZoom] = useState(1);
+  const navigate = useNavigate();
+
   useEffect(() => {
   const stopAudio = () => {
     if (audioRef.current) {
@@ -666,6 +715,24 @@ export default function CrocodileScene({
     window.removeEventListener("beforeunload", stopAudio);
     document.removeEventListener("visibilitychange", stopAudio);
   };
+}, []);
+
+useEffect(() => {
+  if (!audioRef.current) {
+    audioRef.current = new Audio(AMBIENT_AUDIO);
+    audioRef.current.loop = true;
+    audioRef.current.volume = 0; // autoplay permitido
+    audioRef.current.play().then(() => {
+      let v = 0;
+      const fade = setInterval(() => {
+        v += 0.05;
+        audioRef.current.volume = Math.min(v, 1);
+        if (v >= 1) clearInterval(fade);
+      }, 200);
+    }).catch(() => {
+      console.log("Autoplay bloqueado, esperar interacción");
+    });
+  }
 }, []);
 
   const toggleAudio = () => {
@@ -746,12 +813,12 @@ export default function CrocodileScene({
             scale={2.8}
             extraZ={-2.2}/>
 
-          <SeagullFlock src={birdImg} />
+          <SeagullFlock scale={0.35} />
 
           <OrbitControls enableZoom={false} enablePan={false} />
         </Canvas>
       </div>
-
+        <div className="canvas-separator"></div>        
       {/* ⭐ TEXTO MÁS VISIBLE Y PROFESIONAL ⭐ */}
       <div className="art-description improved-text">
         <h2>
@@ -763,6 +830,32 @@ export default function CrocodileScene({
 
         <p className="desc-text">{meta.description}</p>
       </div>
+      <div className="top-buttons">
+        <button className="back-gallery-btn" onClick={() => navigate("/")}>
+            ⬅ Gallery
+        </button>
+
+        <button className="view-img-btn" onClick={() => setShowModal(true)}>
+            Ver imagen
+        </button>
+      </div>
+      {showModal && (
+        <div className="img-modal-overlay" onClick={() => setShowModal(false)}>
+            <div className="img-modal" onClick={(e) => e.stopPropagation()}>
+            <img
+                src={crocImg}
+                className="zoom-img"
+                onWheel={(e) => {
+                e.preventDefault();
+                e.target.style.transform = `scale(${zoom + e.deltaY * -0.001})`;
+                setZoom(Math.max(1, zoom + e.deltaY * -0.001));
+                }}
+            />
+            <button className="close-modal" onClick={() => setShowModal(false)}>✖</button>
+            </div>
+        </div>
+        )}
     </div>
+    
   );
 }

@@ -27,6 +27,20 @@
   position: relative;
 }
 
+.canvas-box::after {
+  content: "";
+  position: absolute;
+  inset: 0;
+  pointer-events: none; /* no bloquea interacción */
+  background: linear-gradient(
+      45deg,
+      rgba(255, 140, 40, 0.35),
+      rgba(255, 200, 140, 0.25)
+    );
+  mix-blend-mode: overlay;
+  z-index: 5;
+}
+
 /* ------------------------------------------------------
    BOTÓN DE AUDIO
 ------------------------------------------------------ */
@@ -266,6 +280,95 @@
   overflow: visible;
   animation: leafMotion 3s ease-in-out infinite alternate;
 }
+/* línea iluminada */
+.canvas-separator {
+  width: 100%;
+  height: 4px;
+  background: linear-gradient(90deg, #00ffc6, #0077ff, #00ffc6);
+  box-shadow: 0 0 12px #00ffc6, 0 0 18px #0077ff;
+  margin: 20px 0;
+  border-radius: 6px;
+  animation: glow 3s infinite alternate;
+}
+
+@keyframes glow {
+  0% { filter: brightness(0.9); }
+  100% { filter: brightness(1.5); }
+}
+
+.top-buttons {
+  width: 100%;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 0.5rem 1rem;
+  left: 0;
+  z-index: 1000;
+}
+
+.top-buttons button {
+  font-size: 1rem;
+  padding: 8px 14px;
+  cursor: pointer;
+}
+
+.view-img-btn,
+.back-gallery-btn {
+  padding: 12px 20px;
+  background: #00b7ff;
+  border: none;
+  color: white;
+  font-size: 16px;
+  margin: 20px auto;
+  display: block;
+  cursor: pointer;
+  border-radius: 10px;
+  transition: 0.2s;
+}
+
+.view-img-btn:hover,
+.back-gallery-btn:hover {
+  background: #0094cc;
+}
+
+/* Modal */
+.img-modal-overlay {
+  position: fixed;
+  inset: 0;
+  background: rgba(0,0,0,0.75);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  z-index: 9999;
+}
+
+.img-modal {
+  position: relative;
+  background: #111;
+  padding: 20px;
+  border-radius: 12px;
+  max-width: 90vw;
+  max-height: 90vh;
+}
+
+.zoom-img {
+  max-width: 100%;
+  max-height: 80vh;
+  transition: transform 0.1s ease-out;
+}
+
+.close-modal {
+  position: absolute;
+  top: -10px;
+  right: -10px;
+  background: #ff4444;
+  border: none;
+  color: white;
+  padding: 10px 12px;
+  border-radius: 50%;
+  cursor: pointer;
+}
+
 
 /* ------------------------------------------------------
    RESPONSIVE DESIGN
@@ -294,5 +397,13 @@
 
   .desc-text {
     font-size: 16px;
+  }
+  .art-description {
+    padding-top: 0%;
+    margin-top: 0%;    
+  }
+  .top-buttons {
+    position: fixed;
+    bottom: 10px;
   }
 }
