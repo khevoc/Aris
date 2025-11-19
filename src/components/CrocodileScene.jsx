@@ -530,7 +530,6 @@ function PalmFront({ src, uv, scale, extraZ=0 }) {
 
   useEffect(() => {
     tex.encoding = THREE.sRGBEncoding;
-    tex.flipY = false;
   }, [tex]);
 
   const [posX, posY, posZ] = uvToPlane(uv, 0.55 + extraZ);
@@ -542,7 +541,7 @@ function PalmFront({ src, uv, scale, extraZ=0 }) {
   });
 
   return (
-    <mesh ref={ref} position={[posX, posY, posZ]} scale={[scale, scale, 1]}>
+    <mesh ref={ref} position={[posX, posY, posZ]} scale={[scale, -scale, 1]}>
       <planeGeometry args={[1, 1]} />
       <meshStandardMaterial
         map={tex}
