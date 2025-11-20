@@ -530,7 +530,6 @@ function PalmFront({ src, uv, scale, extraZ=0 }) {
 
   useEffect(() => {
     tex.encoding = THREE.sRGBEncoding;
-    tex.flipY = false;
   }, [tex]);
 
   const [posX, posY, posZ] = uvToPlane(uv, 0.55 + extraZ);
