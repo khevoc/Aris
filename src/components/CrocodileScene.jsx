@@ -164,7 +164,7 @@ function CrocodileBase() {
 function SeagullFlock({
   src = birdImg,
   count = 4,
-  y = 1.1,
+  y = 0.1,
   scale = 0.25,
   z = -0.5,
   startX = -5,
