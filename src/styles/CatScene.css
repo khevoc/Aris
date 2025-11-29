@@ -1,0 +1,118 @@
+/* src/styles/CatScene.css */
+
+.cat-scene-root {
+  position: relative;
+  width: 100vw;
+  height: 100vh;
+  overflow: hidden;
+  background: black;
+}
+
+/* Imagen principal del gato (ajustada sin scroll) */
+.cat-background {
+  position: absolute;
+  inset: 0;
+  width: 100vw;
+  height: 100vh;
+  object-fit: contain;   /* 💚 Ajusta la imagen sin recortar ni hacer scroll */
+  z-index: 1;
+  background: black;      /* Evita espacio vacío en bordes */
+}
+
+/* Si usas esta clase en lugar de .cat-background */
+.cat-image {
+  width: 100vw;
+  height: 100vh;
+  object-fit: contain;   /* 🔥 Ahora siempre entra completa */
+  display: block;
+  background-color: black;
+}
+
+
+/* Capa oscura general */
+.dark-overlay {
+  position: absolute;
+  inset: 0;
+  background: rgba(0, 0, 0, 0.82);  /* oscuridad suave */
+  z-index: 2;
+  pointer-events: none;
+}
+
+/* ---- EFECTO LINTERNA ---- */
+.flashlight-mask {
+  position: absolute;
+  inset: 0;
+  pointer-events: none;
+  z-index: 3;
+
+  /* Usamos mask en WebKit + clip-path como fallback */
+  -webkit-mask-image: radial-gradient(
+    circle 250px at var(--x) var(--y),
+    rgba(0, 0, 0, 0) 0%,
+    rgba(0, 0, 0, 0.2) 50%,
+    rgba(0, 0, 0, 0.9) 100%
+  );
+  mask-image: radial-gradient(
+    circle 250px at var(--x) var(--y),
+    rgba(0, 0, 0, 0) 0%,
+    rgba(0, 0, 0, 0.2) 50%,
+    rgba(0, 0, 0, 0.9) 100%
+  );
+
+  /* transición suave del movimiento
+     genera un efecto "ligero" tipo luz real */
+  transition: mask-image 0.15s linear, -webkit-mask-image 0.15s linear;
+  
+  /* animación de respiración leve */
+  animation: flashlightPulse 3s ease-in-out infinite;
+}
+
+/* Pulso leve de luz */
+@keyframes flashlightPulse {
+  0% {
+    --intensity: 0.85;
+  }
+  50% {
+    --intensity: 1.05;
+  }
+  100% {
+    --intensity: 0.85;
+  }
+}
+
+/* Filtro oscuro TOTAL + linterna circular */
+.catspotlight {
+  position: absolute;
+  inset: 0;
+  pointer-events: none;
+
+  /* Fondo oscuro */
+  background: rgba(0, 0, 0, 0.75);
+
+  /* Linterna que descubre la imagen */
+  mask-image: radial-gradient(
+    circle 300px at var(--spot-x) var(--spot-y),
+    transparent 0%,
+    transparent 40%,
+    black 60%
+  );
+  -webkit-mask-image: radial-gradient(
+    circle 300px at var(--spot-x) var(--spot-y),
+    transparent 0%,
+    transparent 40%,
+    black 60%
+  );
+
+  transition: mask-image 0.1s linear;
+}
+
+/* Texto opcional */
+.catscene-text {
+  position: absolute;
+  bottom: 20px;
+  left: 20px;
+  color: white;
+  font-size: 1.1rem;
+  opacity: 0.8;
+  pointer-events: none;
+}

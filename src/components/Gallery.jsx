@@ -19,7 +19,7 @@ const ARTWORKS = [
     image: "/paintings/night_vision.jpg",
     effects: ["/effects/leaves.png", "/effects/smoke.png"],
     description: "Acrylic on Wood Panel — 2024",
-    link: "/mockup",
+    link: "/night-vision",
   },
   {
     id: 3,
