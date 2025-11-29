@@ -47,13 +47,13 @@
 
   /* Usamos mask en WebKit + clip-path como fallback */
   -webkit-mask-image: radial-gradient(
-    circle 250px at var(--x) var(--y),
+    circle 180px at var(--x) var(--y),
     rgba(0, 0, 0, 0) 0%,
     rgba(0, 0, 0, 0.2) 50%,
     rgba(0, 0, 0, 0.9) 100%
   );
   mask-image: radial-gradient(
-    circle 250px at var(--x) var(--y),
+    circle 180px at var(--x) var(--y),
     rgba(0, 0, 0, 0) 0%,
     rgba(0, 0, 0, 0.2) 50%,
     rgba(0, 0, 0, 0.9) 100%
@@ -115,4 +115,69 @@
   font-size: 1.1rem;
   opacity: 0.8;
   pointer-events: none;
+}
+
+/* Barra inferior fija */
+.cat-bottom-bar {
+  position: fixed;
+  bottom: 0;
+  left: 0;
+  width: 100%;
+  height: 70px;
+
+  background: rgba(0, 0, 0, 0.45);
+  backdrop-filter: blur(10px);
+
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 0 25px;
+
+  z-index: 20;
+}
+
+/* Botones neon animados */
+.neon-btn {
+  padding: 12px 28px;
+  font-size: 1.1rem;
+  font-weight: 600;
+  border: none;
+  border-radius: 12px;
+
+  color: white;
+  cursor: pointer;
+
+  background: linear-gradient(90deg,
+    #0ff, #0f0, #ff0, #f0f, #0ff
+  );
+  background-size: 400% 400%;
+
+  animation: neonGlow 6s ease infinite;
+  box-shadow: 0 0 12px #0ff, 0 0 22px rgba(0,255,255,0.4);
+  transition: transform 0.15s ease;
+}
+
+.neon-btn:hover {
+  transform: scale(1.06);
+  box-shadow: 0 0 18px #0ff, 0 0 30px rgba(0,255,255,0.7);
+}
+
+/* Animación del gradiente chroma */
+@keyframes neonGlow {
+  0% { background-position: 0% 50%; }
+  50% { background-position: 100% 50%; }
+  100% { background-position: 0% 50%; }
+}
+
+
+/* Barra inferior responsive */
+@media (max-width: 600px) {
+  .neon-btn {
+    padding: 10px 22px;
+    font-size: 1rem;
+  }
+  .cat-bottom-bar {
+    height: 62px;
+    padding: 0 18px;
+  }
 }

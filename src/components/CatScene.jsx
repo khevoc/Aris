@@ -1,14 +1,19 @@
 // src/components/CatScene.jsx
 import React, { useEffect, useRef, useState } from "react";
+import { useNavigate } from "react-router-dom";
 import "../styles/CatScene.css";
 
 import catImg from "../assets/cat.jpg";
+import catAImg from "../assets/cat2.jpg";
 
 export default function CatScene() {
   const spotlightRef = useRef(null);
   const containerRef = useRef(null);
 
   const [position, setPosition] = useState({ x: -9999, y: -9999 });
+
+  const navigate = useNavigate();
+  const [activeMode, setActiveMode] = useState(false);
 
   // --- DESKTOP: MOUSE MOVE ---
   useEffect(() => {
@@ -39,10 +44,23 @@ export default function CatScene() {
     return () => document.removeEventListener("touchmove", handleTouchMove);
   }, []);
 
+  useEffect(() => {
+  const preventScroll = (e) => {
+    e.preventDefault();
+  };
+
+  // Bloqueo del scroll mientras se toca la pantalla
+  document.addEventListener("touchmove", preventScroll, { passive: false });
+
+  return () => {
+    document.removeEventListener("touchmove", preventScroll);
+  };
+}, []);
+
   return (
     <div className="catscene-root" ref={containerRef}>
       {/* Imagen del gato */}
-      <img src={catImg} alt="Cat" className="cat-image" />
+      <img src={activeMode ? catAImg : catImg} alt="Cat" className="cat-image" />
 
       {/* Filtro oscuro + linterna */}
       <div
@@ -53,6 +71,22 @@ export default function CatScene() {
           "--spot-y": `${position.y}px`,
         }}
       ></div>
+
+      <div className="cat-bottom-bar">
+        <button
+          className="neon-btn"
+          onClick={() => navigate("/")}
+        >
+          Gallery
+        </button>
+
+        <button
+          className="neon-btn"
+          onClick={() => setActiveMode((prev) => !prev)}
+        >
+          {activeMode ? "Normal" : "Active"}
+        </button>
+      </div>
       
     </div>
   );
