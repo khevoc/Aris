@@ -832,11 +832,11 @@ useEffect(() => {
       </div>
       <div className="top-buttons">
         <button className="back-gallery-btn" onClick={() => navigate("/")}>
-            ⬅ Gallery
+            Gallery
         </button>
 
         <button className="view-img-btn" onClick={() => setShowModal(true)}>
-            Ver imagen
+            View Image
         </button>
       </div>
       {showModal && (

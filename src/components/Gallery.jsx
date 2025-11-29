@@ -1,6 +1,7 @@
 // src/components/Gallery.jsx
 import React, { useState } from "react";
 import ArtworkDisplay from "./ArtworkDisplay";
+import { Icons } from "../components/ui/Icons";
 import "../styles/Gallery.css";
 
 const ARTWORKS = [
@@ -23,11 +24,11 @@ const ARTWORKS = [
   },
   {
     id: 3,
-    title: "Crocodile Experience",
+    title: "Crocovacations",
     author: "Carlos T.",
     image: "/paintings/crocodile.jpg",
     effects: ["/effects/water.png", "/effects/splash.png"],
-    description: "Experiencia interactiva — 2025",
+    description: "Acrylic on Canvas ° Interactive Experience — 2025",
     link: "/croco-experience",
   },
 ];
@@ -50,7 +51,7 @@ export default function Gallery() {
 
       {/* Controles y miniaturas */}
       <div className="gallery-controls">
-        <button className="nav-btn left" onClick={prev}>◀</button>
+        <button className="nav-btn left" onClick={prev}><Icons.leftGlow /></button>
 
         <div className="thumbs">
           {ARTWORKS.map((a, i) => (
@@ -64,7 +65,7 @@ export default function Gallery() {
           ))}
         </div>
 
-        <button className="nav-btn right" onClick={next}>▶</button>
+        <button className="nav-btn right" onClick={next}><Icons.rightGlow /></button>
       </div>
     </div>
   );

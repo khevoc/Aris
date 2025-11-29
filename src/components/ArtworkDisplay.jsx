@@ -1,6 +1,7 @@
 import React from 'react'
 import { motion, AnimatePresence } from 'framer-motion'
 import { Link } from 'react-router-dom'
+import { Icons } from "../components/ui/Icons";
 import SurroundingElements from './SurroundingElements'
 import '../styles/ArtworkDisplay.css'
 
@@ -39,7 +40,7 @@ export default function ArtworkDisplay({ artwork }) {
             {/* Botón para experiencias como Crocodile Experience */}
             {artwork.link && (
               <Link to={artwork.link} className='artwork-link'>
-                Entrar a la experiencia →
+                Enter to Experience <Icons.rightSoft style={{ display: "inline"}} />
               </Link>
             )}
           </div>

@@ -45,20 +45,42 @@
 
 /* Flechas */
 .nav-btn {
-  background: rgba(255, 255, 255, 0.06);
-  border: 1px solid rgba(255, 255, 255, 0.15);
+  width: 55px;
+  height: 55px;
+
+  display: flex;
+  align-items: center;
+  justify-content: center;
+
+  border-radius: 50%;
+  border: none;
+
+  background: rgba(255, 255, 255, 0.08);
   backdrop-filter: blur(6px);
-  color: #fff;
-  font-size: 1.8rem;
-  padding: 10px 18px;
-  border-radius: 12px;
+
   cursor: pointer;
   transition: 0.25s ease;
+
+  box-shadow: 0 0 12px rgba(0, 0, 0, 0.25);
+
+  position: relative;
+  overflow: hidden;
 }
 
-.nav-btn:hover {
-  background: rgba(255, 255, 255, 0.15);
-  transform: scale(1.12);
+/* Glow interno */
+.nav-btn::before {
+  content: "";
+  position: absolute;
+  inset: 0;
+
+  background: radial-gradient(
+    circle,
+    rgba(0, 255, 180, 0.35),
+    transparent 70%
+  );
+
+  opacity: 0;
+  transition: 0.35s ease;
 }
 
 /* --- MINIATURAS --- */
@@ -110,5 +132,9 @@
 
   .nav-btn {
     font-size: 1.4rem;
+  }
+
+  .gallery-frame {
+    padding:0%;
   }
 }
