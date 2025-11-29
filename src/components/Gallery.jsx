@@ -1,5 +1,5 @@
 // src/components/Gallery.jsx
-import React, { useState } from "react";
+import React, { useState, useRef } from "react";
 import ArtworkDisplay from "./ArtworkDisplay";
 import { Icons } from "../components/ui/Icons";
 import "../styles/Gallery.css";
@@ -35,11 +35,36 @@ const ARTWORKS = [
 
 export default function Gallery() {
   const [index, setIndex] = useState(0);
-  const next = () => setIndex((i) => (i + 1) % ARTWORKS.length);
-  const prev = () => setIndex((i + ARTWORKS.length - 1) % ARTWORKS.length);
+
+  const next = () =>
+    setIndex((prev) => (prev + 1) % ARTWORKS.length);
+
+  const prev = () =>
+    setIndex((prev) => (prev - 1 + ARTWORKS.length) % ARTWORKS.length);
+
+  // --- SWIPE TOUCH SUPPORT ---
+  const touchStartX = useRef(0);
+  const touchEndX = useRef(0);
+
+  const MIN_SWIPE = 50; // distancia mínima en px para que cuente como gesto
+
+  const onTouchStart = (e) => {
+    touchStartX.current = e.changedTouches[0].clientX;
+  };
+
+  const onTouchEnd = (e) => {
+    touchEndX.current = e.changedTouches[0].clientX;
+    const diff = touchEndX.current - touchStartX.current;
+
+    if (Math.abs(diff) < MIN_SWIPE) return;
+
+    if (diff < 0) next(); // swipe left → next
+    if (diff > 0) prev(); // swipe right → prev
+  };
 
   return (
-    <div className="gallery-root">
+    <div className="gallery-root" onTouchStart={onTouchStart}
+    onTouchEnd={onTouchEnd}>
 
       {/* Contenedor principal */}
       <div className="gallery-frame">
