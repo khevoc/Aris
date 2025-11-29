@@ -684,7 +684,7 @@ export default function CrocodileScene({
     year: "2025",
     medium: "Mixed Reality Artwork - Acrylic on Canvas",
     description:
-      "An interactive experience featuring a stylish crocodile enjoying a coastal drive. A blend of surreal humor and tropical palette.",
+      "An interactive experience featuring a stylish crocodile.",
   },
 }) {
   const audioRef = useRef(null);
