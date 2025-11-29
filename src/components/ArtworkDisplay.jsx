@@ -27,7 +27,7 @@ export default function ArtworkDisplay({ artwork }) {
             />
 
             {/* Efectos alrededor */}
-            <SurroundingElements images={artwork.effects || []} />
+            {/* <SurroundingElements images={artwork.effects || []} /> */}
           </div>
 
           {/* Información */}
