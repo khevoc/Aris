@@ -404,5 +404,6 @@
   }
   .top-buttons {
     bottom: 10px;
+    padding-top: 100px;
   }
 }

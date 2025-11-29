@@ -684,7 +684,10 @@ export default function CrocodileScene({
     year: "2025",
     medium: "Mixed Reality Artwork - Acrylic on Canvas",
     description:
-      "An interactive experience featuring a stylish crocodile.",
+      <a>Just a cool croc on vacations.<br/>
+        An interactive experience featuring a stylish red crocodile.
+      </a>
+      
   },
 }) {
   const audioRef = useRef(null);
