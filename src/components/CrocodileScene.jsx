@@ -842,8 +842,8 @@ useEffect(() => {
             className="details-toggle-btn"
             onClick={() => setOpenDetails((v) => !v)}
           >
-            {openDetails ? <Icons.up size={18}/> : <Icons.down size={18}/>}
-            Details
+            {openDetails ? <Icons.chevronsUp size={18}/> : <Icons.chevronsDown size={18}/>}
+            
           </button>
         </div>
 

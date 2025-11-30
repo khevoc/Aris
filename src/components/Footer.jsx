@@ -21,19 +21,19 @@ export default function Footer() {
       <div className="fx-footer-content">
 
         <div className="fx-footer-icons">
-          <a href="https://instagram.com/TU_INSTAGRAM" target="_blank" rel="noreferrer">
+          <a href="https://instagram.com/leoaetheris" target="_blank" rel="noreferrer">
             <Icons.instagram size={22}/>
           </a>
 
-          <a href="https://www.etsy.com/shop/TU_TIENDA" target="_blank" rel="noreferrer">
+          <a href="https://www.etsy.com/shop/leoaetheris" target="_blank" rel="noreferrer">
             <Icons.store size={22}/>
           </a>
 
-          <a href="https://TU_WEB.com" target="_blank" rel="noreferrer">
+          <a style={{ display: "none" }} href="https://TU_WEB.com" target="_blank" rel="noreferrer">
             <Icons.globe size={22}/>
           </a>
 
-          <a href="mailto:TU_EMAIL@gmail.com">
+          <a href="mailto:leo.di.aether@gmail.com">
             <Icons.mail size={22}/>
           </a>
         </div>

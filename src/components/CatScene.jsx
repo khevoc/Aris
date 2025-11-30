@@ -5,6 +5,7 @@ import "../styles/CatScene.css";
 
 import catImg from "../assets/cat.jpg";
 import catAImg from "../assets/cat2.jpg";
+import { Icons } from "./ui/Icons";
 
 export default function CatScene() {
   const containerRef = useRef(null);
@@ -94,7 +95,7 @@ export default function CatScene() {
           className="neon-btn"
           onClick={() => setActiveMode((p) => !p)}
         >
-          {activeMode ? "Normal Mode" : "Active Mode"}
+          {activeMode ? Icons.zapOff() : Icons.zap()}
         </button>
       </div>
     </div>

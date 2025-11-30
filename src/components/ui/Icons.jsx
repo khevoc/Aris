@@ -32,7 +32,12 @@ import {
   Mail,
   Instagram,
   Volume2,
-  VolumeOff
+  VolumeOff,
+  ChevronsDownIcon,
+  ChevronsUpIcon,
+  Zap,
+  ZapOff,
+
 
 } from "lucide-react";
 
@@ -101,6 +106,10 @@ export const Icons = {
   // Versiones Glow
   leftGlow: make(ChevronLeft, "neonGlow"),
   rightGlow: make(ChevronRight, "neonGlow"),
+  chevronsUp: make(ChevronsUpIcon, "neonGlow"),
+  chevronsDown: make(ChevronsDownIcon, "neonGlow"),
+  zap : make(Zap, "neonGlow"),
+  zapOff : make(ZapOff, "neonGlow"),
 
   // Sutil
   leftSoft: make(ChevronLeft, "subtleGlow"),
