@@ -15,9 +15,7 @@ export default function CatScene() {
 
   const navigate = useNavigate();
 
-  /* -----------------------------------------------------
-     DESKTOP MOVE
-  ----------------------------------------------------- */
+  /* ------------------------ DESKTOP ------------------------ */
   useEffect(() => {
     const handleMouseMove = (e) => {
       if (!containerRef.current) return;
@@ -27,13 +25,12 @@ export default function CatScene() {
         y: e.clientY - rect.top,
       });
     };
+
     document.addEventListener("mousemove", handleMouseMove);
     return () => document.removeEventListener("mousemove", handleMouseMove);
   }, []);
 
-  /* -----------------------------------------------------
-     TOUCH MOVE
-  ----------------------------------------------------- */
+  /* ------------------------ MOBILE TOUCH ------------------------ */
   useEffect(() => {
     const handleTouchMove = (e) => {
       const touch = e.touches[0];
@@ -44,13 +41,12 @@ export default function CatScene() {
         y: touch.clientY - rect.top,
       });
     };
+
     document.addEventListener("touchmove", handleTouchMove, { passive: true });
     return () => document.removeEventListener("touchmove", handleTouchMove);
   }, []);
 
-  /* -----------------------------------------------------
-     BLOCK SCROLL ON MOBILE
-  ----------------------------------------------------- */
+  /* ------------------------ BLOQUEAR SCROLL EN MOBILE ------------------------ */
   useEffect(() => {
     const preventScroll = (e) => e.preventDefault();
     document.addEventListener("touchmove", preventScroll, { passive: false });
@@ -62,14 +58,14 @@ export default function CatScene() {
       className={`cat-scene-root ${activeMode ? "active-mode" : ""}`}
       ref={containerRef}
     >
-      {/* Fondo del gato */}
+      {/* Imagen principal */}
       <img
         src={activeMode ? catAImg : catImg}
-        alt="cat"
+        alt="Night vision cat"
         className="cat-image"
       />
 
-      {/* Efecto linterna */}
+      {/* Spotlight base */}
       <div
         className="catspotlight"
         style={{
@@ -78,24 +74,38 @@ export default function CatScene() {
         }}
       ></div>
 
-      {/* ✔ Partículas (cinemáticas) */}
+      {/* Halo cromático alrededor de la luz */}
+      <div
+        className="spot-chroma"
+        style={{
+          "--spot-x": `${position.x}px`,
+          "--spot-y": `${position.y}px`,
+        }}
+      ></div>
+
+      {/* Partículas / polvo en el aire */}
       <div className="particles-layer"></div>
 
+      {/* Scanlines sutiles tipo monitor */}
+      <div className="scanlines-layer"></div>
 
-      {/* ✔ Glitch en modo activo */}
+      {/* Fog cinematográfico */}
+      <div className="fog-layer"></div>
+
+      {/* Vignette / lente anamórfica */}
+      <div className="lens-vignette"></div>
+
+      {/* Glitch elegante solo en modo activo */}
       {activeMode && <div className="glitch-overlay"></div>}
 
-      {/* Top bar */}
-      <div className="cat-top-bar">
-        <button className="neon-btn" onClick={() => navigate("/")}>
-          ← Gallery
-        </button>
+      {/* HUD superior fijo */}
+      <div className="cat-top-bar">      
 
         <button
           className="neon-btn"
           onClick={() => setActiveMode((p) => !p)}
         >
-          {activeMode ? Icons.zapOff() : Icons.zap()}
+          {activeMode ? Icons.zapOff({ size: 18 }) : Icons.zap({ size: 18 })}
         </button>
       </div>
     </div>

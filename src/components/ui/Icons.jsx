@@ -37,6 +37,8 @@ import {
   ChevronsUpIcon,
   Zap,
   ZapOff,
+  Image,
+  ShoppingBagIcon
 
 
 } from "lucide-react";
@@ -157,7 +159,9 @@ export const Icons = {
   store: make(StoreIcon, "minimal"),
   globe: make(Globe, "minimal"),
   mail: make(Mail, "minimal"),
+  image: make(Image, "minimal"),
   instagram: make(Instagram, "minimal"),
+  shoppingBag: make(ShoppingBagIcon, "minimal"),
 
 };
 

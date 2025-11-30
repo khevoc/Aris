@@ -9,6 +9,8 @@
   overflow: hidden;
   background: black;
   touch-action: none;
+  font-family: system-ui, -apple-system, BlinkMacSystemFont, "SF Pro Text",
+    "Inter", sans-serif;
 }
 
 /* Imagen del gato */
@@ -19,16 +21,20 @@
   height: 100vh;
   object-fit: contain;
   z-index: 1;
-  transition: opacity 0.6s ease, filter 0.5s ease;
+  transition:
+    opacity 0.6s ease,
+    filter 0.6s ease,
+    transform 0.8s ease;
 }
 
-/* Modo activo — realza la imagen */
+/* Modo activo — más dramatismo */
 .cat-scene-root.active-mode .cat-image {
-  filter: contrast(1.25) brightness(1.15) saturate(1.2);
+  filter: contrast(1.25) brightness(1.18) saturate(1.25);
+  transform: scale(1.02);
 }
 
 /* ==========================================================
-   LINTERN SPOTLIGHT
+   SPOTLIGHT PRINCIPAL
 ========================================================== */
 .catspotlight {
   position: absolute;
@@ -36,43 +42,105 @@
   z-index: 5;
   pointer-events: none;
 
-  background: rgba(0, 0, 0, 0.75);
+  background: rgba(0, 0, 0, 0.78);
 
   mask-image: radial-gradient(
     circle 280px at var(--spot-x) var(--spot-y),
     transparent 0%,
-    transparent 40%,
-    black 70%
+    transparent 42%,
+    black 75%
   );
 
   -webkit-mask-image: radial-gradient(
     circle 280px at var(--spot-x) var(--spot-y),
     transparent 0%,
-    transparent 40%,
-    black 70%
+    transparent 42%,
+    black 75%
   );
 
   transition: mask-image 0.1s linear, opacity 0.5s ease;
 }
 
+/* Halo cromático alrededor del foco */
+.spot-chroma {
+  position: absolute;
+  inset: 0;
+  z-index: 6;
+  pointer-events: none;
+
+  background:
+    radial-gradient(
+      circle 220px at var(--spot-x) var(--spot-y),
+      rgba(0, 255, 255, 0.18) 0%,
+      rgba(0, 255, 255, 0.09) 30%,
+      transparent 60%
+    ),
+    radial-gradient(
+      circle 260px at calc(var(--spot-x) + 14px) calc(var(--spot-y) + 8px),
+      rgba(255, 0, 120, 0.16) 0%,
+      rgba(255, 0, 120, 0.05) 35%,
+      transparent 70%
+    );
+
+  mix-blend-mode: screen;
+  opacity: 0.9;
+  transition: opacity 0.4s ease;
+}
+
+/* En modo activo, un poco más intenso */
+.cat-scene-root.active-mode .spot-chroma {
+  opacity: 1;
+}
+
 /* ==========================================================
-   PARTICULAS CINEMÁTICAS (layer)
+   PARTICULAS / POLVO
 ========================================================== */
 .particles-layer {
   position: absolute;
   inset: 0;
-  z-index: 3;
+  z-index: 2;
   pointer-events: none;
-  background-image: radial-gradient(white 1px, transparent 1px);
-  background-size: 4px 4px;
-  opacity: 0.12;
-  animation: particlesMove 18s linear infinite;
+
+  background-image:
+    radial-gradient(rgba(255, 255, 255, 0.16) 1px, transparent 1px),
+    radial-gradient(rgba(0, 255, 180, 0.08) 1px, transparent 1px);
+  background-position: 0 0, 40px 40px;
+  background-size: 4px 4px, 5px 5px;
+  opacity: 0.14;
+  animation: particlesMove 20s linear infinite;
 }
 
 @keyframes particlesMove {
-  0% { transform: translateY(0) translateX(0) scale(1); }
-  50% { transform: translateY(-20px) translateX(10px) scale(1.1); }
-  100% { transform: translateY(0) translateX(0) scale(1); }
+  0% {
+    transform: translate3d(0, 0, 0) scale(1);
+  }
+  50% {
+    transform: translate3d(10px, -18px, 0) scale(1.05);
+  }
+  100% {
+    transform: translate3d(0, 0, 0) scale(1);
+  }
+}
+
+/* ==========================================================
+   SCANLINES SUAVES
+========================================================== */
+.scanlines-layer {
+  position: absolute;
+  inset: 0;
+  z-index: 3;
+  pointer-events: none;
+
+  background: repeating-linear-gradient(
+    to bottom,
+    rgba(0, 0, 0, 0.35) 0px,
+    rgba(0, 0, 0, 0.35) 1px,
+    transparent 2px,
+    transparent 3px
+  );
+
+  mix-blend-mode: soft-light;
+  opacity: 0.15;
 }
 
 /* ==========================================================
@@ -80,25 +148,60 @@
 ========================================================== */
 .fog-layer {
   position: absolute;
-  inset: 0;
+  inset: -10%;
   z-index: 4;
   pointer-events: none;
 
-  background: url("https://i.imgur.com/8eQ8R4r.png"); /* niebla suave */
-  background-size: cover;
-  opacity: 0.22;
+  background-image:
+    radial-gradient(circle at 10% 20%, rgba(0, 255, 180, 0.08), transparent 60%),
+    radial-gradient(circle at 80% 70%, rgba(0, 100, 255, 0.12), transparent 60%);
+  opacity: 0.25;
 
-  animation: fogFloat 24s ease-in-out infinite;
+  animation: fogFloat 26s ease-in-out infinite;
 }
 
 @keyframes fogFloat {
-  0%   { transform: scale(1.05) translateX(-10px); opacity: 0.22; }
-  50%  { transform: scale(1.2)  translateX(10px); opacity: 0.32; }
-  100% { transform: scale(1.05) translateX(-10px); opacity: 0.22; }
+  0% {
+    transform: translate3d(-10px, 10px, 0) scale(1.05);
+    opacity: 0.22;
+  }
+  50% {
+    transform: translate3d(12px, -8px, 0) scale(1.15);
+    opacity: 0.32;
+  }
+  100% {
+    transform: translate3d(-10px, 10px, 0) scale(1.05);
+    opacity: 0.22;
+  }
 }
 
 /* ==========================================================
-   GLITCH — SOLO EN MODO ACTIVO
+   VIGNETTE / LENS
+========================================================== */
+.lens-vignette {
+  position: absolute;
+  inset: -5%;
+  z-index: 7;
+  pointer-events: none;
+
+  background:
+    radial-gradient(
+      circle at 50% 50%,
+      transparent 0%,
+      transparent 55%,
+      rgba(0, 0, 0, 0.55) 90%
+    ),
+    radial-gradient(
+      ellipse at 50% 120%,
+      rgba(0, 255, 255, 0.12),
+      transparent 70%
+    );
+  mix-blend-mode: multiply;
+  opacity: 0.95;
+}
+
+/* ==========================================================
+   GLITCH — SOLO MODO ACTIVO
 ========================================================== */
 .glitch-overlay {
   position: absolute;
@@ -106,81 +209,135 @@
   z-index: 8;
   pointer-events: none;
 
-  background: repeating-linear-gradient(
-    0deg,
-    rgba(255,0,0,0.08) 0px,
-    rgba(0,255,255,0.08) 2px,
-    transparent 4px
-  );
-
+  background:
+    linear-gradient(
+      to bottom,
+      rgba(255, 0, 120, 0.12),
+      rgba(0, 255, 255, 0.2)
+    );
   mix-blend-mode: screen;
-  animation: glitchJitter 0.25s steps(2) infinite;
+  opacity: 0.5;
+  animation: glitchJitter 0.22s steps(2) infinite;
 }
 
 @keyframes glitchJitter {
-  0% { transform: translateX(0); }
-  50% { transform: translateX(2px); }
-  100% { transform: translateX(0); }
+  0% {
+    transform: translateX(0);
+    clip-path: inset(0 0 0 0);
+  }
+  25% {
+    transform: translateX(-2px);
+    clip-path: inset(10% 0 60% 0);
+  }
+  50% {
+    transform: translateX(2px);
+    clip-path: inset(40% 0 20% 0);
+  }
+  75% {
+    transform: translateX(-1px);
+    clip-path: inset(0 0 80% 0);
+  }
+  100% {
+    transform: translateX(0);
+    clip-path: inset(0 0 0 0);
+  }
 }
 
 /* ==========================================================
-   TOP BAR HUD CINEMÁTICO
+   TOP BAR — HUD FIJO
 ========================================================== */
 .cat-top-bar {
   position: fixed;
   top: 0;
-  left: 0;
+  right: 0;
   width: 100%;
   height: 78px;
+  z-index: 30;
 
-  background: rgba(0, 0, 0, 0.32);
-  backdrop-filter: blur(14px) brightness(1.15);
+  background: linear-gradient(
+    to bottom,
+    rgba(0, 0, 0, 0.7),
+    rgba(0, 0, 0, 0.2)
+  );
+  backdrop-filter: blur(18px) saturate(1.4);
 
   display: flex;
-  justify-content: space-between;
+  justify-content: flex-end;
   align-items: center;
   padding: 0 22px;
 
-  z-index: 20;
-  border-bottom: 1px solid rgba(255,255,255,0.08);
+  border-bottom: 1px solid rgba(255, 255, 255, 0.1);
 }
 
 /* Botones neon premium */
 .neon-btn {
   padding: 12px 26px;
-  font-size: 1rem;
-  border-radius: 12px;
-  border: none;
+  font-size: 0.98rem;
+  border-radius: 999px;
+  border: 1px solid rgba(255, 255, 255, 0.18);
   cursor: pointer;
   color: white;
-  background: linear-gradient(90deg, #0ff, #55f, #90f, #0ff);
-  background-size: 400% 400%;
+
+  background: linear-gradient(120deg, #00f5ff, #6c5ce7, #ff00c3, #00f5ff);
+  background-size: 260% 260%;
   animation: neonScroll 8s ease infinite;
-  box-shadow: 0 0 12px rgba(0,255,255,0.35);
-  transition: transform 0.15s ease, box-shadow 0.3s ease;
+
+  box-shadow:
+    0 0 10px rgba(0, 245, 255, 0.45),
+    0 0 22px rgba(0, 0, 0, 0.9);
+  transition:
+    transform 0.15s ease,
+    box-shadow 0.25s ease,
+    border-color 0.25s ease,
+    background-position 0.35s ease;
 }
 
 .neon-btn:hover {
-  transform: scale(1.05);
-  box-shadow: 0 0 20px rgba(0,255,255,0.65);
+  transform: translateY(-1px) scale(1.04);
+  box-shadow:
+    0 0 18px rgba(0, 245, 255, 0.7),
+    0 0 35px rgba(0, 0, 0, 0.95);
+  border-color: rgba(255, 255, 255, 0.4);
 }
 
 @keyframes neonScroll {
-  0% { background-position: 0% 50%; }
-  50% { background-position: 100% 50%; }
-  100% { background-position: 0% 50%; }
+  0% {
+    background-position: 0% 50%;
+  }
+  50% {
+    background-position: 100% 50%;
+  }
+  100% {
+    background-position: 0% 50%;
+  }
 }
 
 /* ==========================================================
    RESPONSIVE
 ========================================================== */
 @media (max-width: 600px) {
-  .neon-btn {
-    padding: 10px 20px;
-    font-size: 0.9rem;
-  }
   .cat-top-bar {
     height: 68px;
-    padding: 0 15px;
+    padding: 0 14px;
+  }
+
+  .neon-btn {
+    padding: 9px 18px;
+    font-size: 0.86rem;
+  }
+
+  .catspotlight {
+    mask-image: radial-gradient(
+      circle 220px at var(--spot-x) var(--spot-y),
+      transparent 0%,
+      transparent 38%,
+      black 75%
+    );
+    -webkit-mask-image: radial-gradient(
+      circle 220px at var(--spot-x) var(--spot-y),
+      transparent 0%,
+      transparent 38%,
+      black 75%
+    );
   }
 }

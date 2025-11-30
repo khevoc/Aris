@@ -19,6 +19,7 @@ import palmTImg from "../assets/palm-t.png";
 import palmSImg from "../assets/palm-s.png";
 import palmCImg from "../assets/palm-c.png";
 import birdImg from "../assets/bird2.gif";
+import { MoveRight } from "lucide-react";
 
 const VIDEO_SRC = "/bg-video.mp4";
 const AMBIENT_AUDIO = "/sounds/ocean-waves.mp3";
@@ -842,28 +843,26 @@ useEffect(() => {
             className="details-toggle-btn"
             onClick={() => setOpenDetails((v) => !v)}
           >
-            {openDetails ? <Icons.chevronsUp size={18}/> : <Icons.chevronsDown size={18}/>}
+            {openDetails ? <Icons.chevronsUp height="3rem" width="3rem" /> : <Icons.chevronsDown height="3rem" width="3rem" />}
             
           </button>
         </div>
 
         {openDetails && (
           <div className="art-details-box">
-            <p><strong>Size:</strong> 90 × 90 cm</p>
-            <p><strong>Technique:</strong> Acrylic</p>
-            <p><strong>Support:</strong> Canvas</p>
-            <p><strong>Year:</strong> 2025</p>
+            <div className="art-details-content">
+              <p><strong>Size:</strong> 70 × 70 cm</p>
+              <p><strong>Technique:</strong> Acrylic</p>
+              <p><strong>Support:</strong> Canvas</p>
+              <p><strong>Year:</strong> 2025</p>
+            </div>
+            <button className="details-camera-btn" onClick={() => setShowModal(true)}>
+              <Icons.camera height="4rem" width="4rem" />
+            </button>
+            
+            
           </div>
         )}
-      <div className="top-buttons">
-        <button className="back-gallery-btn" onClick={() => navigate("/")}>
-            Gallery
-        </button>
-
-        <button className="view-img-btn" onClick={() => setShowModal(true)}>
-            View Image
-        </button>
-      </div>
       {showModal && (
         <div className="img-modal-overlay" onClick={() => setShowModal(false)}>
             <div className="img-modal" onClick={(e) => e.stopPropagation()}>
@@ -880,7 +879,7 @@ useEffect(() => {
             </div>
         </div>
         )}
-        <div className="color-bar-final"></div>
+        <div style={{display: "none"}} className="color-bar-final"></div>
     </div>
     
   );

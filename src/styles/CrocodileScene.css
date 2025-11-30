@@ -192,28 +192,91 @@
 /* ------------------------- DETAILS EXPANDING PANEL ------------------------- */
 
 .art-details-box {
-  width: 92%;
-  max-width: 880px;
+  position: relative;
+  width: 100%;
+  padding: 22px 20px;
+  margin-top: 10px;
 
-  margin: 18px auto;
-  padding: 1.6rem 2rem;
+  display: flex;
+  justify-content: space-between;
+  align-items: flex-start;
+  gap: 20px;
 
-  border-radius: 22px;
-  background: rgba(255,255,255,0.07);
-  backdrop-filter: blur(20px) saturate(1.4);
+  background: rgba(0, 0, 0, 0.32);
+  backdrop-filter: blur(14px);
+  border-radius: 14px;
 
-  border: 1px solid rgba(255,255,255,0.16);
-
+  border: 1px solid rgba(255, 255, 255, 0.08);
   box-shadow:
-    0 26px 65px rgba(0,0,0,0.55),
-    inset 0 0 35px rgba(255,255,255,0.04);
+    0 0 25px rgba(0, 255, 255, 0.05),
+    inset 0 0 18px rgba(255, 255, 255, 0.03);
 
-  animation: cinematicSlide 0.35s ease both;
+  animation: fadeUpDetails 0.45s ease forwards;
+  opacity: 0;
+  transform: translateY(12px);
 }
 
-@keyframes cinematicSlide {
-  from { opacity: 0; transform: translateY(-18px) scale(0.97); }
-  to   { opacity: 1; transform: translateY(0) scale(1); }
+@keyframes fadeUpDetails {
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+
+/* ============================= */
+/* LEFT TEXT CONTENT             */
+/* ============================= */
+
+.art-details-content {
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+  color: #e6e6e6;
+  font-size: 0.95rem;
+  line-height: 1.45;
+}
+
+.art-details-content strong {
+  color: #ffffff;
+  font-weight: 600;
+}
+
+
+/* ============================= */
+/* CAMERA BUTTON (right side)    */
+/* ============================= */
+
+.details-camera-btn {
+  position: relative;
+
+  border: none;
+  background: none;
+  outline: none;
+  cursor: pointer;
+
+  padding: 8px;
+  border-radius: 50%;
+
+  color: #00eaff; /* color principal */
+  transition:
+    transform 0.18s ease,
+    color 0.18s ease,
+    text-shadow 0.25s ease;
+}
+
+.details-camera-btn:hover {
+  transform: scale(1.15);
+  color: #7dfdff;
+  text-shadow: 0 0 12px rgba(0, 242, 255, 0.8);
+}
+
+.details-camera-btn:active {
+  transform: scale(0.88);
+  color: #fff;
+  text-shadow:
+    0 0 14px rgba(0, 255, 255, 1),
+    0 0 26px rgba(0, 255, 255, 0.6);
 }
 
 .art-details-box p {
