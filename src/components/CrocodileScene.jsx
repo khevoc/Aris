@@ -4,6 +4,7 @@ import { Canvas, useLoader, useFrame } from "@react-three/fiber";
 import { useNavigate } from "react-router-dom";
 import { OrbitControls, Html } from "@react-three/drei";
 import { useMemo } from "react";
+import { Icons } from "./ui/Icons";
 import * as THREE from "three";
 import "../styles/CrocodileScene.css";
 
@@ -669,10 +670,10 @@ function Frame() {
 function Lights() {
   return (
     <>
-      <ambientLight intensity={0.35} />
+      <ambientLight intensity={0.25} />
       <directionalLight position={[1, 2, 4]} intensity={1.4} />
       <pointLight position={[-2, -1, 3]} intensity={0.7} />
-      <pointLight position={[0, 1, 2]} intensity={0.4} color="#ffdca8" />
+      <pointLight position={[0, 1, 2]} intensity={0.4} color="#facd8aff" />
     </>
   );
 }
@@ -696,6 +697,8 @@ export default function CrocodileScene({
   const [showModal, setShowModal] = useState(false);
   const [zoom, setZoom] = useState(1);
   const navigate = useNavigate();
+
+  const [openDetails, setOpenDetails] = useState(false);
 
   useEffect(() => {
   const stopAudio = () => {
@@ -760,7 +763,7 @@ useEffect(() => {
       {/* ⭐ BOTÓN DENTRO DEL CANVAS — FIJO Y SIN ROTAR ⭐ */}
       <div className="ambient-btn-overlay">
         <button onClick={toggleAudio}>
-          {audioOn ? "🔈 Stop Ambient" : "🔊 Ambient"}
+          {audioOn ? <Icons.volumeOff size={18} /> : <Icons.volumeOn size={18} />}
         </button>
       </div>
 
@@ -822,17 +825,36 @@ useEffect(() => {
         </Canvas>
       </div>
         <div className="canvas-separator"></div>        
-      {/* ⭐ TEXTO MÁS VISIBLE Y PROFESIONAL ⭐ */}
-      <div className="art-description improved-text">
-        <h2>
-          {meta.title}
-          <span> — {meta.year}</span>
-        </h2>
+        {/* ⭐ TEXTO MÁS VISIBLE Y PROFESIONAL ⭐ */}
+        <div className="art-description improved-text">
+          <h2>
+            {meta.title}
+            <span> — {meta.year}</span>
+          </h2>
 
-        <p className="medium">{meta.medium}</p>
+          <p className="medium">{meta.medium}</p>
 
-        <p className="desc-text">{meta.description}</p>
-      </div>
+          <p className="desc-text">{meta.description}</p>
+        </div>
+        {/* ---- TOGGLE DETAILS ---- */}
+        <div className="details-toggle-bar">
+          <button
+            className="details-toggle-btn"
+            onClick={() => setOpenDetails((v) => !v)}
+          >
+            {openDetails ? <Icons.up size={18}/> : <Icons.down size={18}/>}
+            Details
+          </button>
+        </div>
+
+        {openDetails && (
+          <div className="art-details-box">
+            <p><strong>Size:</strong> 90 × 90 cm</p>
+            <p><strong>Technique:</strong> Acrylic</p>
+            <p><strong>Support:</strong> Canvas</p>
+            <p><strong>Year:</strong> 2025</p>
+          </div>
+        )}
       <div className="top-buttons">
         <button className="back-gallery-btn" onClick={() => navigate("/")}>
             Gallery
@@ -858,6 +880,7 @@ useEffect(() => {
             </div>
         </div>
         )}
+        <div className="color-bar-final"></div>
     </div>
     
   );

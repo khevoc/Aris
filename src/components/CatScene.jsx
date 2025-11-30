@@ -7,87 +7,96 @@ import catImg from "../assets/cat.jpg";
 import catAImg from "../assets/cat2.jpg";
 
 export default function CatScene() {
-  const spotlightRef = useRef(null);
   const containerRef = useRef(null);
 
   const [position, setPosition] = useState({ x: -9999, y: -9999 });
-
-  const navigate = useNavigate();
   const [activeMode, setActiveMode] = useState(false);
 
-  // --- DESKTOP: MOUSE MOVE ---
+  const navigate = useNavigate();
+
+  /* -----------------------------------------------------
+     DESKTOP MOVE
+  ----------------------------------------------------- */
   useEffect(() => {
-    function handleMouseMove(e) {
+    const handleMouseMove = (e) => {
+      if (!containerRef.current) return;
       const rect = containerRef.current.getBoundingClientRect();
       setPosition({
         x: e.clientX - rect.left,
         y: e.clientY - rect.top,
       });
-    }
-
+    };
     document.addEventListener("mousemove", handleMouseMove);
     return () => document.removeEventListener("mousemove", handleMouseMove);
   }, []);
 
-  // --- MOBILE: TOUCH MOVE ---
+  /* -----------------------------------------------------
+     TOUCH MOVE
+  ----------------------------------------------------- */
   useEffect(() => {
-    function handleTouchMove(e) {
+    const handleTouchMove = (e) => {
       const touch = e.touches[0];
+      if (!containerRef.current) return;
       const rect = containerRef.current.getBoundingClientRect();
       setPosition({
         x: touch.clientX - rect.left,
         y: touch.clientY - rect.top,
       });
-    }
-
+    };
     document.addEventListener("touchmove", handleTouchMove, { passive: true });
     return () => document.removeEventListener("touchmove", handleTouchMove);
   }, []);
 
+  /* -----------------------------------------------------
+     BLOCK SCROLL ON MOBILE
+  ----------------------------------------------------- */
   useEffect(() => {
-  const preventScroll = (e) => {
-    e.preventDefault();
-  };
-
-  // Bloqueo del scroll mientras se toca la pantalla
-  document.addEventListener("touchmove", preventScroll, { passive: false });
-
-  return () => {
-    document.removeEventListener("touchmove", preventScroll);
-  };
-}, []);
+    const preventScroll = (e) => e.preventDefault();
+    document.addEventListener("touchmove", preventScroll, { passive: false });
+    return () => document.removeEventListener("touchmove", preventScroll);
+  }, []);
 
   return (
-    <div className="catscene-root" ref={containerRef}>
-      {/* Imagen del gato */}
-      <img src={activeMode ? catAImg : catImg} alt="Cat" className="cat-image" />
+    <div
+      className={`cat-scene-root ${activeMode ? "active-mode" : ""}`}
+      ref={containerRef}
+    >
+      {/* Fondo del gato */}
+      <img
+        src={activeMode ? catAImg : catImg}
+        alt="cat"
+        className="cat-image"
+      />
 
-      {/* Filtro oscuro + linterna */}
+      {/* Efecto linterna */}
       <div
         className="catspotlight"
-        ref={spotlightRef}
         style={{
           "--spot-x": `${position.x}px`,
           "--spot-y": `${position.y}px`,
         }}
       ></div>
 
-      <div className="cat-bottom-bar">
-        <button
-          className="neon-btn"
-          onClick={() => navigate("/")}
-        >
-          Gallery
+      {/* ✔ Partículas (cinemáticas) */}
+      <div className="particles-layer"></div>
+
+
+      {/* ✔ Glitch en modo activo */}
+      {activeMode && <div className="glitch-overlay"></div>}
+
+      {/* Top bar */}
+      <div className="cat-top-bar">
+        <button className="neon-btn" onClick={() => navigate("/")}>
+          ← Gallery
         </button>
 
         <button
           className="neon-btn"
-          onClick={() => setActiveMode((prev) => !prev)}
+          onClick={() => setActiveMode((p) => !p)}
         >
-          {activeMode ? "Normal" : "Active"}
+          {activeMode ? "Normal Mode" : "Active Mode"}
         </button>
       </div>
-      
     </div>
   );
 }

@@ -1,183 +1,186 @@
-/* src/styles/CatScene.css */
-
+/* ==========================================================
+   ROOT — ESCENA BASE
+========================================================== */
 .cat-scene-root {
-  position: relative;
+  position: fixed;
+  inset: 0;
   width: 100vw;
   height: 100vh;
   overflow: hidden;
   background: black;
+  touch-action: none;
 }
 
-/* Imagen principal del gato (ajustada sin scroll) */
-.cat-background {
-  position: absolute;
-  inset: 0;
-  width: 100vw;
-  height: 100vh;
-  object-fit: contain;   /* 💚 Ajusta la imagen sin recortar ni hacer scroll */
-  z-index: 1;
-  background: black;      /* Evita espacio vacío en bordes */
-}
-
-/* Si usas esta clase en lugar de .cat-background */
+/* Imagen del gato */
 .cat-image {
+  position: absolute;
+  inset: 0;
   width: 100vw;
   height: 100vh;
-  object-fit: contain;   /* 🔥 Ahora siempre entra completa */
-  display: block;
-  background-color: black;
+  object-fit: contain;
+  z-index: 1;
+  transition: opacity 0.6s ease, filter 0.5s ease;
 }
 
-
-/* Capa oscura general */
-.dark-overlay {
-  position: absolute;
-  inset: 0;
-  background: rgba(0, 0, 0, 0.82);  /* oscuridad suave */
-  z-index: 2;
-  pointer-events: none;
+/* Modo activo — realza la imagen */
+.cat-scene-root.active-mode .cat-image {
+  filter: contrast(1.25) brightness(1.15) saturate(1.2);
 }
 
-/* ---- EFECTO LINTERNA ---- */
-.flashlight-mask {
-  position: absolute;
-  inset: 0;
-  pointer-events: none;
-  z-index: 3;
-
-  /* Usamos mask en WebKit + clip-path como fallback */
-  -webkit-mask-image: radial-gradient(
-    circle 180px at var(--x) var(--y),
-    rgba(0, 0, 0, 0) 0%,
-    rgba(0, 0, 0, 0.2) 50%,
-    rgba(0, 0, 0, 0.9) 100%
-  );
-  mask-image: radial-gradient(
-    circle 180px at var(--x) var(--y),
-    rgba(0, 0, 0, 0) 0%,
-    rgba(0, 0, 0, 0.2) 50%,
-    rgba(0, 0, 0, 0.9) 100%
-  );
-
-  /* transición suave del movimiento
-     genera un efecto "ligero" tipo luz real */
-  transition: mask-image 0.15s linear, -webkit-mask-image 0.15s linear;
-  
-  /* animación de respiración leve */
-  animation: flashlightPulse 3s ease-in-out infinite;
-}
-
-/* Pulso leve de luz */
-@keyframes flashlightPulse {
-  0% {
-    --intensity: 0.85;
-  }
-  50% {
-    --intensity: 1.05;
-  }
-  100% {
-    --intensity: 0.85;
-  }
-}
-
-/* Filtro oscuro TOTAL + linterna circular */
+/* ==========================================================
+   LINTERN SPOTLIGHT
+========================================================== */
 .catspotlight {
   position: absolute;
   inset: 0;
+  z-index: 5;
   pointer-events: none;
 
-  /* Fondo oscuro */
   background: rgba(0, 0, 0, 0.75);
 
-  /* Linterna que descubre la imagen */
   mask-image: radial-gradient(
-    circle 300px at var(--spot-x) var(--spot-y),
+    circle 280px at var(--spot-x) var(--spot-y),
     transparent 0%,
     transparent 40%,
-    black 60%
+    black 70%
   );
+
   -webkit-mask-image: radial-gradient(
-    circle 300px at var(--spot-x) var(--spot-y),
+    circle 280px at var(--spot-x) var(--spot-y),
     transparent 0%,
     transparent 40%,
-    black 60%
+    black 70%
   );
 
-  transition: mask-image 0.1s linear;
+  transition: mask-image 0.1s linear, opacity 0.5s ease;
 }
 
-/* Texto opcional */
-.catscene-text {
+/* ==========================================================
+   PARTICULAS CINEMÁTICAS (layer)
+========================================================== */
+.particles-layer {
   position: absolute;
-  bottom: 20px;
-  left: 20px;
-  color: white;
-  font-size: 1.1rem;
-  opacity: 0.8;
+  inset: 0;
+  z-index: 3;
   pointer-events: none;
+  background-image: radial-gradient(white 1px, transparent 1px);
+  background-size: 4px 4px;
+  opacity: 0.12;
+  animation: particlesMove 18s linear infinite;
 }
 
-/* Barra inferior fija */
-.cat-bottom-bar {
+@keyframes particlesMove {
+  0% { transform: translateY(0) translateX(0) scale(1); }
+  50% { transform: translateY(-20px) translateX(10px) scale(1.1); }
+  100% { transform: translateY(0) translateX(0) scale(1); }
+}
+
+/* ==========================================================
+   FOG CINEMÁTICO
+========================================================== */
+.fog-layer {
+  position: absolute;
+  inset: 0;
+  z-index: 4;
+  pointer-events: none;
+
+  background: url("https://i.imgur.com/8eQ8R4r.png"); /* niebla suave */
+  background-size: cover;
+  opacity: 0.22;
+
+  animation: fogFloat 24s ease-in-out infinite;
+}
+
+@keyframes fogFloat {
+  0%   { transform: scale(1.05) translateX(-10px); opacity: 0.22; }
+  50%  { transform: scale(1.2)  translateX(10px); opacity: 0.32; }
+  100% { transform: scale(1.05) translateX(-10px); opacity: 0.22; }
+}
+
+/* ==========================================================
+   GLITCH — SOLO EN MODO ACTIVO
+========================================================== */
+.glitch-overlay {
+  position: absolute;
+  inset: 0;
+  z-index: 8;
+  pointer-events: none;
+
+  background: repeating-linear-gradient(
+    0deg,
+    rgba(255,0,0,0.08) 0px,
+    rgba(0,255,255,0.08) 2px,
+    transparent 4px
+  );
+
+  mix-blend-mode: screen;
+  animation: glitchJitter 0.25s steps(2) infinite;
+}
+
+@keyframes glitchJitter {
+  0% { transform: translateX(0); }
+  50% { transform: translateX(2px); }
+  100% { transform: translateX(0); }
+}
+
+/* ==========================================================
+   TOP BAR HUD CINEMÁTICO
+========================================================== */
+.cat-top-bar {
   position: fixed;
-  bottom: 0;
+  top: 0;
   left: 0;
   width: 100%;
-  height: 70px;
+  height: 78px;
 
-  background: rgba(0, 0, 0, 0.45);
-  backdrop-filter: blur(10px);
+  background: rgba(0, 0, 0, 0.32);
+  backdrop-filter: blur(14px) brightness(1.15);
 
   display: flex;
   justify-content: space-between;
   align-items: center;
-  padding: 0 25px;
+  padding: 0 22px;
 
   z-index: 20;
+  border-bottom: 1px solid rgba(255,255,255,0.08);
 }
 
-/* Botones neon animados */
+/* Botones neon premium */
 .neon-btn {
-  padding: 12px 28px;
-  font-size: 1.1rem;
-  font-weight: 600;
-  border: none;
+  padding: 12px 26px;
+  font-size: 1rem;
   border-radius: 12px;
-
-  color: white;
+  border: none;
   cursor: pointer;
-
-  background: linear-gradient(90deg,
-    #0ff, #0f0, #ff0, #f0f, #0ff
-  );
+  color: white;
+  background: linear-gradient(90deg, #0ff, #55f, #90f, #0ff);
   background-size: 400% 400%;
-
-  animation: neonGlow 6s ease infinite;
-  box-shadow: 0 0 12px #0ff, 0 0 22px rgba(0,255,255,0.4);
-  transition: transform 0.15s ease;
+  animation: neonScroll 8s ease infinite;
+  box-shadow: 0 0 12px rgba(0,255,255,0.35);
+  transition: transform 0.15s ease, box-shadow 0.3s ease;
 }
 
 .neon-btn:hover {
-  transform: scale(1.06);
-  box-shadow: 0 0 18px #0ff, 0 0 30px rgba(0,255,255,0.7);
+  transform: scale(1.05);
+  box-shadow: 0 0 20px rgba(0,255,255,0.65);
 }
 
-/* Animación del gradiente chroma */
-@keyframes neonGlow {
+@keyframes neonScroll {
   0% { background-position: 0% 50%; }
   50% { background-position: 100% 50%; }
   100% { background-position: 0% 50%; }
 }
 
-
-/* Barra inferior responsive */
+/* ==========================================================
+   RESPONSIVE
+========================================================== */
 @media (max-width: 600px) {
   .neon-btn {
-    padding: 10px 22px;
-    font-size: 1rem;
+    padding: 10px 20px;
+    font-size: 0.9rem;
   }
-  .cat-bottom-bar {
-    height: 62px;
-    padding: 0 18px;
+  .cat-top-bar {
+    height: 68px;
+    padding: 0 15px;
   }
 }

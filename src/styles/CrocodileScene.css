@@ -1,409 +1,413 @@
-/* ------------------------------------------------------
-   LAYOUT BASE
------------------------------------------------------- */
+/* ========================================================================== */
+/*                 CROCODILE SCENE — ULTRA CINEMATIC EDITION                 */
+/* ========================================================================== */
+
+/* ----------------------------- ROOT BACKGROUND ----------------------------- */
+
 .crocodile-root {
   width: 100%;
-  min-height: 50vh;
-  background: #0a0a0a;
+  min-height: 100vh;
+
+  /* Fondo cinematográfico */
+  background: radial-gradient(circle at 60% 20%, #0d0d15, #020205 70%);
+  background-attachment: fixed;
+
   display: flex;
   flex-direction: column;
   align-items: center;
-  padding: 40px 0;
-  font-family: "Times New Roman", serif;
-  color: #e9e9e9;
+  padding: 60px 0 100px;
+
+  font-family: "Inter", "SF Pro Display", sans-serif;
+  color: #f0f0f0;
 }
 
-/* Canvas */
+/* ------------------------------- CANVAS FRAME ------------------------------ */
+
 .canvas-box {
-  width: 90%;
-  max-width: 800px;
-  aspect-ratio: 1.3;
-  border-radius: 12px;
+  width: 92%;
+  max-width: 880px;
+  aspect-ratio: 1.35;
+  border-radius: 28px;
   overflow: hidden;
-  background: #000;
-  box-shadow:
-    0 0 40px rgba(255, 255, 255, 0.05),
-    0 0 80px rgba(255, 255, 255, 0.03) inset;
   position: relative;
+
+  background: rgba(0, 0, 0, 0.85);
+
+  /* Sombras volumétricas cinematográficas */
+  box-shadow:
+    0 40px 80px rgba(0,0,0,0.7),
+    0 0 160px rgba(0,150,255,0.1);
+
+  backdrop-filter: blur(18px) saturate(1.4);
 }
 
+/* Luz ambiental superior */
+.canvas-box::before {
+  content: "";
+  position: absolute;
+  inset: -6px;
+  background: radial-gradient(circle at 50% 0%, rgba(255,255,255,0.08), transparent 70%);
+  z-index: 2;
+  pointer-events: none;
+}
+
+/* Luz cálida lateral tipo estudio de cine */
 .canvas-box::after {
   content: "";
   position: absolute;
   inset: 0;
-  pointer-events: none; /* no bloquea interacción */
-  background: linear-gradient(
-      45deg,
-      rgba(255, 140, 40, 0.35),
-      rgba(255, 200, 140, 0.25)
-    );
-  mix-blend-mode: overlay;
-  z-index: 5;
-}
-
-/* ------------------------------------------------------
-   BOTÓN DE AUDIO
------------------------------------------------------- */
-.audio-btn {
-  margin-bottom: 24px;
-  padding: 10px 22px;
-  background: #111;
-  border: 1px solid rgba(255, 255, 255, 0.25);
-  border-radius: 6px;
-  color: #e2e2e2;
-  cursor: pointer;
-  font-size: 16px;
-  transition: 0.25s ease;
-}
-
-.audio-btn:hover {
-  background: #1b1b1b;
-  border-color: #fff;
-  transform: translateY(-2px);
-}
-
-/* ------------------------------------------------------
-   TEXTO - ESTILO DE CATÁLOGO DE ARTE
------------------------------------------------------- */
-.art-description {
-  width: 90%;
-  max-width: 850px;
-  margin-top: 40px;
-  padding-top: 40px;
-  border-top: 1px solid rgba(255, 255, 255, 0.1);
-  text-align: left;
-}
-
-.art-description h2 {
-  font-size: 42px;
-  font-weight: 400;
-  margin: 0;
-  letter-spacing: 1px;
-}
-
-.art-description h2 span {
-  color: #aaa;
-  font-size: 28px;
-}
-
-.medium {
-  margin-top: 10px;
-  font-size: 20px;
-  color: #c6c6c6;
-}
-
-.desc-text {
-  margin-top: 20px;
-  font-size: 18px;
-  line-height: 1.6;
-  color: #d0d0d0;
-}
-
-/* ------------------------------------------------------
-   SPARKLE EFFECT — PARA LAS GAFAS
------------------------------------------------------- */
-
-.sparkle {
-  position: absolute;
-  width: 12px;
-  height: 12px;
-  background: radial-gradient(circle, white 0%, transparent 70%);
-  border-radius: 50%;
-  pointer-events: none;
+  background: radial-gradient(circle at 20% 80%, rgba(255,170,70,0.12), transparent 75%);
   mix-blend-mode: screen;
-  opacity: 0;
-  animation: sparkleAnim 1.2s ease-out infinite;
+  pointer-events: none;
 }
 
-/* Botón fijo dentro del canvas */
+/* ------------------------------ AMBIENT BUTTON ----------------------------- */
+
 .ambient-btn-overlay {
   position: absolute;
-  top: 12px;
-  right: 18px;
-  z-index: 20;
+  top: 16px;
+  right: 24px;
+  z-index: 30;
 }
 
 .ambient-btn-overlay button {
-  background: rgba(0,0,0,0.65);
-  padding: 8px 14px;
-  border-radius: 8px;
-  border: 1px solid #555;
-  color: white;
-  cursor: pointer;
+  padding: 10px 20px;
+  border-radius: 14px;
   font-size: 14px;
-  backdrop-filter: blur(4px);
+  color: #fff;
+  cursor: pointer;
+
+  background: rgba(255,255,255,0.08);
+
+  border: 1px solid rgba(255,255,255,0.25);
+
+  backdrop-filter: blur(12px) saturate(1.4);
+
+  /* Brillo interior */
+  box-shadow:
+    inset 0 0 16px rgba(255,255,255,0.20),
+    0 6px 20px rgba(0,0,0,0.45);
+
+  transition: 0.25s ease;
 }
 
-/* Texto más grande y visible */
+.ambient-btn-overlay button:hover {
+  background: rgba(255,255,255,0.14);
+  transform: translateY(-2px);
+}
+
+/* ------------------------------- TEXT PANEL ------------------------------- */
+
 .improved-text {
-  color: #f0f0f0;
-  font-size: 1.2rem;
-  padding-top: 40px;
-  max-width: 900px;
+  width: 92%;
+  max-width: 880px;
+  margin-top: 52px;
+
+  padding: 1.8rem 2rem;
+  border-radius: 26px;
+
+  background: rgba(20,20,28,0.45);
+  backdrop-filter: blur(22px) saturate(1.4);
+
+  border: 1px solid rgba(255,255,255,0.10);
+
+  /* Glow dramático */
+  box-shadow:
+    0 24px 60px rgba(0,0,0,0.55),
+    inset 0 0 40px rgba(255,255,255,0.04);
+
+  animation: cinematicFade 0.9s ease both;
+  opacity: 0;
+}
+
+@keyframes cinematicFade {
+  from { opacity: 0; transform: translateY(20px) scale(0.98); }
+  to   { opacity: 1; transform: translateY(0) scale(1); }
 }
 
 .improved-text h2 {
-  font-size: 2.2rem;
-  margin-bottom: 10px;
-  font-family: "Times New Roman", serif;
+  font-family: "Playfair Display", serif;
+  font-size: 2.6rem;
+  font-weight: 300;
+
+  background: linear-gradient(90deg, #ffffff, #dadada);
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+}
+
+.improved-text h2 span {
+  font-size: 1.5rem;
+  opacity: 0.75;
 }
 
 .improved-text .medium {
-  font-size: 1.1rem;
-  opacity: 0.8;
-  margin-bottom: 15px;
+  margin-top: 10px;
+  font-size: 1.2rem;
+  color: #e2e2e2;
+  opacity: 0.85;
 }
 
 .improved-text .desc-text {
+  margin-top: 16px;
   font-size: 1.15rem;
-  line-height: 1.6;
+  line-height: 1.65;
+  color: #dcdcdc;
 }
 
 
-@keyframes sparkleAnim {
-  0% {
-    opacity: 0;
-    transform: scale(0.2);
-  }
-  10% {
-    opacity: 1;
-    transform: scale(1);
-  }
-  40% {
-    opacity: 0.4;
-    transform: scale(0.6);
-  }
-  100% {
-    opacity: 0;
-    transform: scale(0);
-  }
-}
+/* ------------------------ DETAILS TOGGLE BUTTON ---------------------------- */
 
-.crocodile-wrapper {
+.details-toggle-bar {
   width: 100%;
-  height: 100vh;
-  background: radial-gradient(
-      circle at 30% 50%,
-      rgba(40, 40, 55, 0.9),
-      rgba(10, 10, 15, 1)
-  );
-  position: relative;
-  overflow: hidden;
-  backdrop-filter: blur(10px);
+  margin-top: 22px;
+  display: flex;
+  justify-content: center;
 }
 
-/* ✨ Sparkle premium particles */
-.crocodile-wrapper::before {
-  content: "";
-  position: absolute;
-  inset: 0;
-  background-image: url("https://raw.githubusercontent.com/JulianCataldo/magic-sparkles/main/sparkle.png");
-  background-size: 300px;
-  opacity: 0.2;
-  mix-blend-mode: screen;
-  animation: sparkleMove 20s linear infinite;
-  pointer-events: none;
-  filter: drop-shadow(0 0 6px rgba(255,255,255,0.5));
+.details-toggle-btn {
+  padding: 12px 22px;
+  border-radius: 20px;
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  gap: 8px;
+
+  background: rgba(255,255,255,0.10);
+
+  backdrop-filter: blur(18px) saturate(1.2);
+
+  box-shadow:
+    inset 0 0 22px rgba(255,255,255,0.25),
+    0 6px 26px rgba(0, 0, 0, 0.121);
+
+  transition: 0.25s ease;
 }
 
-@keyframes sparkleMove {
-  from {
-    transform: translate3d(-50px, -30px, 0) scale(1.1);
-  }
-  to {
-    transform: translate3d(50px, 30px, 0) scale(1.2);
-  }
+.details-toggle-btn:hover {
+  background: rgba(255,255,255,0.16);
+  transform: translateY(-2px);
 }
 
-/* ✨ Luces laterales suaves */
-.crocodile-wrapper::after {
-  content: "";
-  position: absolute;
-  width: 70%;
-  height: 70%;
-  top: 15%;
-  left: 15%;
-  background: radial-gradient(
-    circle,
-    rgba(255,255,255,0.07) 0%,
-    rgba(0,0,0,0) 70%
-  );
-  filter: blur(40px);
-  pointer-events: none;
+
+/* ------------------------- DETAILS EXPANDING PANEL ------------------------- */
+
+.art-details-box {
+  width: 92%;
+  max-width: 880px;
+
+  margin: 18px auto;
+  padding: 1.6rem 2rem;
+
+  border-radius: 22px;
+  background: rgba(255,255,255,0.07);
+  backdrop-filter: blur(20px) saturate(1.4);
+
+  border: 1px solid rgba(255,255,255,0.16);
+
+  box-shadow:
+    0 26px 65px rgba(0,0,0,0.55),
+    inset 0 0 35px rgba(255,255,255,0.04);
+
+  animation: cinematicSlide 0.35s ease both;
 }
 
-.background-flock {
-  position: absolute;
-  top: 0;
-  left: 0;
-  width: 100%;
-  height: 100%;
-  object-fit: cover;
-  opacity: 0.45;
-  z-index: -3;
+@keyframes cinematicSlide {
+  from { opacity: 0; transform: translateY(-18px) scale(0.97); }
+  to   { opacity: 1; transform: translateY(0) scale(1); }
 }
 
-.bird-layer {
-  pointer-events: none;
-  position: absolute;
-  top: 0;
-  left: 0;
-  width: 100%;
-  height: 100%;
-  z-index: -1;
+.art-details-box p {
+  margin: 6px 0;
+  font-size: 1.05rem;
+  opacity: 0.88;
+  color: #f1f1f1;
 }
 
-.palm,
-.palm-leaf {
-  transform-style: preserve-3d;
-  backface-visibility: hidden;
-  overflow: visible !important;
-}
-.palm {
-  position: absolute;
-  bottom: 0;
-  left: 50%;
-  width: 260px;
-  transform: translateX(-50%) rotateX(180deg);
-  transform-origin: center;
-  overflow: visible;
-  animation: palmMotion 4s ease-in-out infinite alternate;
+.art-details-box strong {
+  color: #fff;
+  opacity: 1;
 }
 
-.palm-leaf {
-  position: absolute;
-  bottom: 0;
-  left: 50%;
-  width: 180px;
-  transform: translateX(-50%) rotateX(180deg);
-  transform-origin: center;
-  overflow: visible;
-  animation: leafMotion 3s ease-in-out infinite alternate;
-}
-/* línea iluminada */
-.canvas-separator {
-  width: 100%;
-  height: 4px;
-  background: linear-gradient(90deg, #00ffc6, #0077ff, #00ffc6);
-  box-shadow: 0 0 12px #00ffc6, 0 0 18px #0077ff;
-  margin: 20px 0;
-  border-radius: 6px;
-  animation: glow 3s infinite alternate;
-}
 
-@keyframes glow {
-  0% { filter: brightness(0.9); }
-  100% { filter: brightness(1.5); }
-}
+/* ------------------------------- BOTTOM BUTTONS ----------------------------- */
 
 .top-buttons {
-  width: 100%;
+  width: 92%;
+  max-width: 880px;
+
+  margin-top: 40px;
   display: flex;
   justify-content: space-between;
-  align-items: center;
-  padding: 0.5rem 1rem;
-  left: 0;
-  z-index: 1000;
-}
-
-.top-buttons button {
-  font-size: 1rem;
-  padding: 8px 14px;
-  cursor: pointer;
 }
 
 .view-img-btn,
 .back-gallery-btn {
-  padding: 12px 20px;
-  background: #00b7ff;
-  border: none;
-  color: white;
-  font-size: 16px;
-  margin: 20px auto;
-  display: block;
+  padding: 14px 28px;
+  border-radius: 20px;
   cursor: pointer;
-  border-radius: 10px;
-  transition: 0.2s;
+  font-size: 15px;
+
+  background: rgba(255,255,255,0.12);
+  border: 1px solid rgba(255,255,255,0.32);
+
+  color: #fff;
+
+  backdrop-filter: blur(18px) saturate(1.4);
+
+  box-shadow:
+    inset 0 0 22px rgba(255,255,255,0.30),
+    0 6px 28px rgba(0,0,0,0.45);
+
+  transition: 0.25s ease;
 }
 
 .view-img-btn:hover,
 .back-gallery-btn:hover {
-  background: #0094cc;
+  background: rgba(255,255,255,0.18);
+  transform: translateY(-3px);
 }
 
-/* Modal */
+/* ------------------------------ MODAL IMAGE ------------------------------- */
+
 .img-modal-overlay {
   position: fixed;
   inset: 0;
-  background: rgba(0,0,0,0.75);
+  background: rgba(0,0,0,0.8);
+  backdrop-filter: blur(14px);
   display: flex;
-  align-items: center;
   justify-content: center;
+  align-items: center;
   z-index: 9999;
+
+  animation: fadeIn 0.25s ease forwards;
+}
+
+@keyframes fadeIn {
+  from { opacity: 0; }
+  to   { opacity: 1; }
 }
 
 .img-modal {
-  position: relative;
-  background: #111;
-  padding: 20px;
-  border-radius: 12px;
-  max-width: 90vw;
-  max-height: 90vh;
-}
+  background: rgba(10,10,12,0.85);
+  padding: 22px;
+  border-radius: 26px;
+  max-width: 94vw;
+  max-height: 94vh;
 
-.zoom-img {
-  max-width: 100%;
-  max-height: 80vh;
-  transition: transform 0.1s ease-out;
+  box-shadow:
+    0 40px 120px rgba(0,0,0,0.8),
+    inset 0 0 50px rgba(255,255,255,0.06);
 }
 
 .close-modal {
   position: absolute;
-  top: -10px;
-  right: -10px;
-  background: #ff4444;
-  border: none;
-  color: white;
-  padding: 10px 12px;
+  top: -14px;
+  right: -14px;
+
+  background: rgba(255,80,80,0.8);
+  padding: 10px 14px;
   border-radius: 50%;
+
+  border: 1px solid rgba(255,255,255,0.25);
   cursor: pointer;
+
+  box-shadow: 0 0 20px rgba(255,0,0,0.4);
+
+  transition: 0.2s ease;
 }
 
+.close-modal:hover {
+  background: rgba(255,120,120,1);
+}
 
-/* ------------------------------------------------------
-   RESPONSIVE DESIGN
------------------------------------------------------- */
+.close-modal:active {
+  transform: translateY(1px);
+}
+.img-modal img {
+  max-width: 90vw;
+  max-height: 80vh;
+  border-radius: 18px;
+  object-fit: contain;
+}
+/* ------------------------------ ENV BUTTONS ------------------------------- */
+.env-button {
+  padding: 12px 24px;
+  font-size: 1rem;
+  font-weight: 600;
+  border: none;
+  border-radius: 12px;
+  cursor: pointer;
+  background: rgba(255,255,255,0.12);
+  color: #fff;
+  backdrop-filter: blur(18px) saturate(1.4);
+  box-shadow:
+    inset 0 0 22px rgba(255,255,255,0.30),
+    0 6px 28px rgba(0,0,0,0.45);
+  transition: 0.25s ease;
+}
+
+.env-button:hover {
+  background: rgba(255,255,255,0.18);
+  transform: translateY(-3px);
+}
+.env-button:active {
+  transform: translateY(1px);
+}
+
+/* ------------------------------ COLOR BAR FINAL ----------------------------- */
+.color-bar-final {
+  width: 92%;
+  max-width: 880px;
+  height: 6px;
+
+  margin: 40px auto 0;
+
+  /* Gradiente neón suave */
+  background: linear-gradient(
+    90deg,
+    rgba(0,255,198,0.9),
+    rgba(0,119,255,0.9),
+    rgba(0,255,198,0.9)
+  );
+
+  /* Glow cinematográfico */
+  box-shadow:
+    0 0 22px rgba(0,255,198,0.45),
+    0 0 30px rgba(0,119,255,0.4),
+    inset 0 0 14px rgba(255,255,255,0.15);
+
+  border-radius: 10px;
+
+  /* animación respirando */
+  animation: colorBarGlow 4s ease-in-out infinite alternate;
+}
+
+@keyframes colorBarGlow {
+  0% { filter: brightness(0.9) blur(1px); }
+  100% { filter: brightness(1.35) blur(2px); }
+}
+
+/* ------------------------------- RESPONSIVE ------------------------------- */
+
 @media (max-width: 600px) {
-  .crocodile-root {
-    padding: 20px 0;
-  }
-
   .canvas-box {
-    width: 95%;
-    aspect-ratio: 1.2;
+    border-radius: 20px;
   }
 
-  .art-description h2 {
-    font-size: 32px;
+  .improved-text {
+    padding: 1.4rem 1.6rem;
   }
 
-  .art-description h2 span {
-    font-size: 20px;
+  .improved-text h2 {
+    font-size: 2rem;
   }
 
-  .medium {
-    font-size: 16px;
+  .details-toggle-btn {
+    padding: 10px 18px;
   }
 
-  .desc-text {
-    font-size: 16px;
-  }
-  .art-description {
-    padding-top: 0%;
-    margin-top: 0%;    
-  }
-  .top-buttons {
-    bottom: 10px;
-    padding-top: 100px;
+  .view-img-btn,
+  .back-gallery-btn {
+    padding: 12px 20px;
   }
 }

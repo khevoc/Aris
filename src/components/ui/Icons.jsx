@@ -23,7 +23,17 @@ import {
   Palette,
   Moon,
   Sun,
-  
+  Flashlight,
+  Fingerprint,
+  ChevronDown,
+  ChevronUp,
+  StoreIcon,
+  Globe,
+  Mail,
+  Instagram,
+  Volume2,
+  VolumeOff
+
 } from "lucide-react";
 
 /* ----------------------------------------------- */
@@ -85,6 +95,8 @@ export const Icons = {
   right: make(ChevronRight, "base"),
   arrowLeft: make(ArrowLeft, "base"),
   arrowRight: make(ArrowRight, "base"),
+  up: make(ChevronUp, "base"),
+  down: make(ChevronDown, "base"),
 
   // Versiones Glow
   leftGlow: make(ChevronLeft, "neonGlow"),
@@ -105,6 +117,8 @@ export const Icons = {
   home: make(Home, "minimal"),
   zoomIn: make(ZoomIn, "minimal"),
   zoomOut: make(ZoomOut, "minimal"),
+  volumeOn: make(Volume2, "minimal"),
+  volumeOff: make(VolumeOff, "minimal"),
 
   // Arte / Creatividad
   gallery: make(GalleryVertical, "base"),
@@ -125,6 +139,17 @@ export const Icons = {
   // Numéricos
   plus: make(Plus, "minimal"),
   minus: make(Minus, "minimal"),
+
+  // Acceso
+  fingerprint: make(Fingerprint, "minimal"),
+
+  // Otros
+  flashlight: make(Flashlight, "minimal"),
+  store: make(StoreIcon, "minimal"),
+  globe: make(Globe, "minimal"),
+  mail: make(Mail, "minimal"),
+  instagram: make(Instagram, "minimal"),
+
 };
 
 /* ----------------------------------------------- */
