@@ -25,6 +25,8 @@
     opacity 0.6s ease,
     filter 0.6s ease,
     transform 0.8s ease;
+    cursor: pointer;
+    pointer-events: none;
 }
 
 /* Modo activo — más dramatismo */
