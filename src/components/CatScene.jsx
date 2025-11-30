@@ -2,6 +2,7 @@
 import React, { useEffect, useRef, useState } from "react";
 import { useNavigate } from "react-router-dom";
 import "../styles/CatScene.css";
+import TapHint from "./TapHint";
 
 import catImg from "../assets/cat.jpg";
 import catAImg from "../assets/cat2.jpg";
@@ -12,7 +13,9 @@ export default function CatScene() {
 
   const [position, setPosition] = useState({ x: -9999, y: -9999 });
   const [activeMode, setActiveMode] = useState(false);
-
+  const [showTapHint, setShowTapHint] = useState(
+    window.innerWidth < 768 || "ontouchstart" in window
+    );
   const navigate = useNavigate();
 
   /* ------------------------ DESKTOP ------------------------ */
@@ -55,7 +58,9 @@ export default function CatScene() {
 
   return (
     <div
-      className={`cat-scene-root ${activeMode ? "active-mode" : ""}`}
+      className={`cat-scene-root ${activeMode ? "active-mode" : ""}${
+            showTapHint ? "distortion-active" : ""
+        }`}
       ref={containerRef}
     >
       {/* Imagen principal */}
@@ -64,6 +69,14 @@ export default function CatScene() {
         alt="Night vision cat"
         className="cat-image"
       />
+      {showTapHint && (
+        <TapHint
+            onTap={() => {
+            if (navigator.vibrate) navigator.vibrate(40);
+            setShowTapHint(false);
+            }}
+        />
+        )}
 
       {/* Spotlight base */}
       <div
