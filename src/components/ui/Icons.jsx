@@ -38,7 +38,9 @@ import {
   Zap,
   ZapOff,
   Image,
-  ShoppingBagIcon
+  ShoppingBagIcon,
+  Linkedin,
+
 
 
 } from "lucide-react";
@@ -161,6 +163,7 @@ export const Icons = {
   mail: make(Mail, "minimal"),
   image: make(Image, "minimal"),
   instagram: make(Instagram, "minimal"),
+  linkedin: make(Linkedin, "minimal"),
   shoppingBag: make(ShoppingBagIcon, "minimal"),
 
 };

@@ -36,6 +36,10 @@ export default function Footer() {
           <a href="mailto:leo.di.aether@gmail.com">
             <Icons.mail size={22}/>
           </a>
+
+          <a href="https://www.linkedin.com/in/carlos-t-598845288/" target="_blank" rel="noreferrer">
+            <Icons.linkedin size={22}/>
+          </a>
         </div>
 
         <p className="fx-footer-text">
