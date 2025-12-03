@@ -9,18 +9,18 @@
     "build": "npm run fix-vite && vite build"
   },
   "dependencies": {
-    "@react-three/drei": "^9.56.12",
-    "@react-three/fiber": "^8.15.14",
-    "@react-three/postprocessing": "^2.15.8",
+    "@react-three/drei": "^9.122.0",
+    "@react-three/fiber": "^8.17.10",
     "@vitejs/plugin-react": "^5.1.0",
+    "framer-motion": "^10.18.0",
     "lucide-react": "^0.555.0",
-    "framer-motion": "^10.12.16",
-    "postprocessing": "^6.32.2",
     "react": "18.2.0",
     "react-dom": "18.2.0",
-    "recharts": "^2.10.3",
     "react-router-dom": "^6.21.1",
-    "three": "^0.152.2"
+    "recharts": "^2.15.4",
+    "three": "^0.170.0",
+    "three-stdlib": "^2.36.1",
+    "webgpu-types": "^0.0.1"
   },
   "devDependencies": {
     "autoprefixer": "^10.4.14",
@@ -29,3 +29,4 @@
     "vite": "^5.1.4"
   }
 }
+
