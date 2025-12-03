@@ -1,7 +1,9 @@
-@tailwind base;
-@tailwind components;
-@tailwind utilities;
+
 @import './App.css';
 @import './Gallery.css';
 @import './ArtworkDisplay.css';
 @import './SurroundingElements.css';
+
+@tailwind base;
+@tailwind components;
+@tailwind utilities;

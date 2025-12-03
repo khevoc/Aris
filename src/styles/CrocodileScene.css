@@ -1,476 +1,184 @@
-/* ========================================================================== */
-/*                 CROCODILE SCENE — ULTRA CINEMATIC EDITION                 */
-/* ========================================================================== */
+/* ==========================================================================
+   CROCODILE AR MODE — IMMERSIVE MOBILE-FIRST
+   ========================================================================== */
 
-/* ----------------------------- ROOT BACKGROUND ----------------------------- */
-
-.crocodile-root {
+.crocodile-ar-root {
   width: 100%;
   min-height: 100vh;
-
-  /* Fondo cinematográfico */
-  background: radial-gradient(circle at 60% 20%, #0d0d15, #020205 70%);
-  background-attachment: fixed;
+  padding: 16px;
+  box-sizing: border-box;
 
   display: flex;
-  flex-direction: column;
   align-items: center;
-  padding: 60px 0 100px;
+  justify-content: center;
 
-  font-family: "Inter", "SF Pro Display", sans-serif;
-  color: #f0f0f0;
+  background:
+    radial-gradient(circle at 10% 0%, rgba(11, 40, 68, 0.95), transparent 60%),
+    radial-gradient(circle at 80% 90%, rgba(189, 120, 72, 0.65), #020308 80%);
+  color: #f5f5f5;
+  font-family: "Inter", system-ui, -apple-system, BlinkMacSystemFont, sans-serif;
 }
 
-/* ------------------------------- CANVAS FRAME ------------------------------ */
+.croc-ar-canvas-shell {
+  position: relative;
+  width: 100%;
+  max-width: 960px;
+  aspect-ratio: 9 / 16;
 
-.canvas-box {
-  width: 92%;
-  max-width: 880px;
-  aspect-ratio: 1.35;
   border-radius: 28px;
   overflow: hidden;
-  position: relative;
 
-  background: rgba(0, 0, 0, 0.85);
-
-  /* Sombras volumétricas cinematográficas */
+  background: radial-gradient(circle at 50% 0%, #050713, #020308 80%);
   box-shadow:
-    0 40px 80px rgba(0,0,0,0.7),
-    0 0 160px rgba(0,150,255,0.1);
-
-  backdrop-filter: blur(18px) saturate(1.4);
+    0 32px 80px rgba(0, 0, 0, 0.9),
+    0 0 140px rgba(0, 200, 255, 0.12);
 }
 
-/* Luz ambiental superior */
-.canvas-box::before {
-  content: "";
+/* HUD superior */
+.croc-ar-hud {
   position: absolute;
-  inset: -6px;
-  background: radial-gradient(circle at 50% 0%, rgba(255,255,255,0.08), transparent 70%);
-  z-index: 2;
+  inset: 10px 12px auto 12px;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  z-index: 10;
   pointer-events: none;
 }
 
-/* Luz cálida lateral tipo estudio de cine */
-.canvas-box::after {
-  content: "";
-  position: absolute;
-  inset: 0;
-  background: radial-gradient(circle at 20% 80%, rgba(255,170,70,0.12), transparent 75%);
-  mix-blend-mode: screen;
-  pointer-events: none;
-}
+.croc-ar-hud-btn {
+  pointer-events: auto;
+  border: none;
+  outline: none;
 
-/* ------------------------------ AMBIENT BUTTON ----------------------------- */
+  width: 40px;
+  height: 40px;
+  border-radius: 999px;
 
-.ambient-btn-overlay {
-  position: absolute;
-  top: 16px;
-  right: 24px;
-  z-index: 30;
-}
+  display: flex;
+  align-items: center;
+  justify-content: center;
 
-.ambient-btn-overlay button {
-  padding: 10px 20px;
-  border-radius: 14px;
-  font-size: 14px;
-  color: #fff;
+  background: radial-gradient(circle at 30% 0%, rgba(255, 255, 255, 0.3), rgba(20, 20, 28, 0.9));
+  color: #ffffff;
   cursor: pointer;
 
-  background: rgba(255,255,255,0.08);
-
-  border: 1px solid rgba(255,255,255,0.25);
-
-  backdrop-filter: blur(12px) saturate(1.4);
-
-  /* Brillo interior */
   box-shadow:
-    inset 0 0 16px rgba(255,255,255,0.20),
-    0 6px 20px rgba(0,0,0,0.45);
+    0 0 0 1px rgba(255, 255, 255, 0.15),
+    0 10px 24px rgba(0, 0, 0, 0.7);
 
-  transition: 0.25s ease;
+  transition: transform 0.18s ease, box-shadow 0.18s ease, background 0.18s ease;
 }
 
-.ambient-btn-overlay button:hover {
-  background: rgba(255,255,255,0.14);
-  transform: translateY(-2px);
-}
-
-/* ------------------------------- TEXT PANEL ------------------------------- */
-
-.improved-text {
-  width: 92%;
-  max-width: 880px;
-  margin-top: 52px;
-
-  padding: 1.8rem 2rem;
-  border-radius: 26px;
-
-  background: rgba(20,20,28,0.45);
-  backdrop-filter: blur(22px) saturate(1.4);
-
-  border: 1px solid rgba(255,255,255,0.10);
-
-  /* Glow dramático */
+.croc-ar-hud-btn:hover {
+  transform: translateY(-1px) scale(1.03);
   box-shadow:
-    0 24px 60px rgba(0,0,0,0.55),
-    inset 0 0 40px rgba(255,255,255,0.04);
-
-  animation: cinematicFade 0.9s ease both;
-  opacity: 0;
+    0 0 0 1px rgba(255, 255, 255, 0.25),
+    0 14px 30px rgba(0, 0, 0, 0.85);
 }
 
-@keyframes cinematicFade {
-  from { opacity: 0; transform: translateY(20px) scale(0.98); }
-  to   { opacity: 1; transform: translateY(0) scale(1); }
+.croc-ar-hud-btn.is-on {
+  background: radial-gradient(circle at 20% 0%, rgba(0, 255, 198, 0.45), rgba(10, 24, 28, 0.95));
+  box-shadow:
+    0 0 16px rgba(0, 255, 198, 0.65),
+    0 14px 30px rgba(0, 0, 0, 0.85);
 }
 
-.improved-text h2 {
-  font-family: "Playfair Display", serif;
-  font-size: 2.6rem;
-  font-weight: 300;
+/* Meta pill */
+.croc-ar-meta-pill {
+  pointer-events: none;
+  padding: 8px 16px;
+  border-radius: 999px;
 
-  background: linear-gradient(90deg, #ffffff, #dadada);
-  -webkit-background-clip: text;
-  -webkit-text-fill-color: transparent;
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+
+  background: rgba(6, 10, 20, 0.8);
+  backdrop-filter: blur(14px);
+  border: 1px solid rgba(255, 255, 255, 0.12);
+  box-shadow:
+    0 10px 26px rgba(0, 0, 0, 0.6),
+    inset 0 0 22px rgba(255, 255, 255, 0.04);
 }
 
-.improved-text h2 span {
-  font-size: 1.5rem;
+.croc-ar-meta-title {
+  font-size: 0.82rem;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  opacity: 0.95;
+}
+
+.croc-ar-meta-dot {
+  font-size: 0.7rem;
+  opacity: 0.7;
+}
+
+.croc-ar-meta-year {
+  font-size: 0.8rem;
   opacity: 0.75;
 }
 
-.improved-text .medium {
-  margin-top: 10px;
-  font-size: 1.2rem;
-  color: #e2e2e2;
-  opacity: 0.85;
+/* Subtil caption dentro del canvas */
+.croc-ar-caption {
+  pointer-events: none;
 }
 
-.improved-text .desc-text {
-  margin-top: 16px;
-  font-size: 1.15rem;
-  line-height: 1.65;
-  color: #dcdcdc;
-}
+.croc-ar-caption-inner {
+  padding: 7px 14px;
+  border-radius: 999px;
+  font-size: 0.75rem;
+  letter-spacing: 0.12em;
+  text-transform: uppercase;
 
-
-/* ------------------------ DETAILS TOGGLE BUTTON ---------------------------- */
-
-.details-toggle-bar {
-  width: 100%;
-  margin-top: 22px;
-  display: flex;
-  justify-content: center;
-}
-
-.details-toggle-btn {
-  padding: 12px 22px;
-  border-radius: 20px;
-  cursor: pointer;
-  display: flex;
-  align-items: center;
-  gap: 8px;
-
-  /* background: rgba(255,255,255,0.10);
-
-  backdrop-filter: blur(18px) saturate(1.2);
-
+  background: rgba(4, 10, 16, 0.9);
+  color: rgba(233, 245, 255, 0.85);
+  border: 1px solid rgba(160, 230, 255, 0.35);
+  backdrop-filter: blur(10px);
   box-shadow:
-    inset 0 0 22px rgba(255,255,255,0.25),
-    0 6px 26px rgba(0, 0, 0, 0.121); */
-
-  transition: 0.25s ease;
-}
-
-.details-toggle-btn:hover {
-  /* background: rgba(255,255,255,0.16); */
-  transform: translateY(-2px);
-}
-
-
-/* ------------------------- DETAILS EXPANDING PANEL ------------------------- */
-
-.art-details-box {
-  position: relative;
-  width: 100%;
-  padding: 22px 20px;
-  margin-top: 10px;
-
-  display: flex;
-  justify-content: space-between;
-  align-items: flex-start;
-  gap: 20px;
-
-  background: rgba(0, 0, 0, 0.32);
-  backdrop-filter: blur(14px);
-  border-radius: 14px;
-
-  border: 1px solid rgba(255, 255, 255, 0.08);
-  box-shadow:
-    0 0 25px rgba(0, 255, 255, 0.05),
-    inset 0 0 18px rgba(255, 255, 255, 0.03);
-
-  animation: fadeUpDetails 0.45s ease forwards;
-  opacity: 0;
-  transform: translateY(12px);
-}
-
-@keyframes fadeUpDetails {
-  to {
-    opacity: 1;
-    transform: translateY(0);
-  }
-}
-
-
-/* ============================= */
-/* LEFT TEXT CONTENT             */
-/* ============================= */
-
-.art-details-content {
-  display: flex;
-  flex-direction: column;
-  gap: 6px;
-  color: #e6e6e6;
-  font-size: 0.95rem;
-  line-height: 1.45;
-}
-
-.art-details-content strong {
-  color: #ffffff;
-  font-weight: 600;
-}
-
-
-/* ============================= */
-/* CAMERA BUTTON (right side)    */
-/* ============================= */
-
-.details-camera-btn {
-  position: relative;
-
-  border: none;
-  background: none;
-  outline: none;
-  cursor: pointer;
-
-  padding: 8px;
-  border-radius: 50%;
-
-  color: #00eaff; /* color principal */
-  transition:
-    transform 0.18s ease,
-    color 0.18s ease,
-    text-shadow 0.25s ease;
-}
-
-.details-camera-btn:hover {
-  transform: scale(1.15);
-  color: #7dfdff;
-  text-shadow: 0 0 12px rgba(0, 242, 255, 0.8);
-}
-
-.details-camera-btn:active {
-  transform: scale(0.88);
-  color: #fff;
-  text-shadow:
-    0 0 14px rgba(0, 255, 255, 1),
-    0 0 26px rgba(0, 255, 255, 0.6);
-}
-
-.art-details-box p {
-  margin: 6px 0;
-  font-size: 1.05rem;
-  opacity: 0.88;
-  color: #f1f1f1;
-}
-
-.art-details-box strong {
-  color: #fff;
-  opacity: 1;
-}
-
-
-/* ------------------------------- BOTTOM BUTTONS ----------------------------- */
-
-.top-buttons {
-  width: 92%;
-  max-width: 880px;
-
-  margin-top: 40px;
-  display: flex;
-  justify-content: space-between;
-}
-
-.view-img-btn,
-.back-gallery-btn {
-  padding: 14px 28px;
-  border-radius: 20px;
-  cursor: pointer;
-  font-size: 15px;
-
-  background: rgba(255,255,255,0.12);
-  border: 1px solid rgba(255,255,255,0.32);
-
-  color: #fff;
-
-  backdrop-filter: blur(18px) saturate(1.4);
-
-  box-shadow:
-    inset 0 0 22px rgba(255,255,255,0.30),
-    0 6px 28px rgba(0,0,0,0.45);
-
-  transition: 0.25s ease;
-}
-
-.view-img-btn:hover,
-.back-gallery-btn:hover {
-  background: rgba(255,255,255,0.18);
-  transform: translateY(-3px);
-}
-
-/* ------------------------------ MODAL IMAGE ------------------------------- */
-
-.img-modal-overlay {
-  position: fixed;
-  inset: 0;
-  background: rgba(0,0,0,0.8);
-  backdrop-filter: blur(14px);
-  display: flex;
-  justify-content: center;
-  align-items: center;
-  z-index: 9999;
-
-  animation: fadeIn 0.25s ease forwards;
-}
-
-@keyframes fadeIn {
-  from { opacity: 0; }
-  to   { opacity: 1; }
-}
-
-.img-modal {
-  background: rgba(10,10,12,0.85);
-  padding: 22px;
-  border-radius: 26px;
-  max-width: 94vw;
-  max-height: 94vh;
-
-  box-shadow:
-    0 40px 120px rgba(0,0,0,0.8),
-    inset 0 0 50px rgba(255,255,255,0.06);
-}
-
-.close-modal {
-  position: absolute;
-  top: -14px;
-  right: -14px;
-
-  background: rgba(255,80,80,0.8);
-  padding: 10px 14px;
-  border-radius: 50%;
-
-  border: 1px solid rgba(255,255,255,0.25);
-  cursor: pointer;
-
-  box-shadow: 0 0 20px rgba(255,0,0,0.4);
-
-  transition: 0.2s ease;
-}
-
-.close-modal:hover {
-  background: rgba(255,120,120,1);
-}
-
-.close-modal:active {
-  transform: translateY(1px);
-}
-.img-modal img {
-  max-width: 90vw;
-  max-height: 80vh;
-  border-radius: 18px;
-  object-fit: contain;
-}
-/* ------------------------------ ENV BUTTONS ------------------------------- */
-.env-button {
-  padding: 12px 24px;
-  font-size: 1rem;
-  font-weight: 600;
-  border: none;
-  border-radius: 12px;
-  cursor: pointer;
-  background: rgba(255,255,255,0.12);
-  color: #fff;
-  backdrop-filter: blur(18px) saturate(1.4);
-  box-shadow:
-    inset 0 0 22px rgba(255,255,255,0.30),
-    0 6px 28px rgba(0,0,0,0.45);
-  transition: 0.25s ease;
-}
-
-.env-button:hover {
-  background: rgba(255,255,255,0.18);
-  transform: translateY(-3px);
-}
-.env-button:active {
-  transform: translateY(1px);
-}
-
-/* ------------------------------ COLOR BAR FINAL ----------------------------- */
-.color-bar-final {
-  width: 92%;
-  max-width: 880px;
-  height: 6px;
-
-  margin: 40px auto 0;
-
-  /* Gradiente neón suave */
-  background: linear-gradient(
-    90deg,
-    rgba(0,255,198,0.9),
-    rgba(0,119,255,0.9),
-    rgba(0,255,198,0.9)
-  );
-
-  /* Glow cinematográfico */
-  box-shadow:
-    0 0 22px rgba(0,255,198,0.45),
-    0 0 30px rgba(0,119,255,0.4),
-    inset 0 0 14px rgba(255,255,255,0.15);
-
-  border-radius: 10px;
-
-  /* animación respirando */
-  animation: colorBarGlow 4s ease-in-out infinite alternate;
-}
-
-@keyframes colorBarGlow {
-  0% { filter: brightness(0.9) blur(1px); }
-  100% { filter: brightness(1.35) blur(2px); }
+    0 10px 24px rgba(0, 0, 0, 0.85),
+    0 0 18px rgba(0, 210, 255, 0.28);
 }
 
 /* ------------------------------- RESPONSIVE ------------------------------- */
 
-@media (max-width: 600px) {
-  .canvas-box {
-    border-radius: 20px;
+@media (max-width: 768px) {
+  .crocodile-ar-root {
+    padding: 10px;
   }
 
-  .improved-text {
-    padding: 1.4rem 1.6rem;
+  .croc-ar-canvas-shell {
+    border-radius: 22px;
+    box-shadow:
+      0 20px 60px rgba(0, 0, 0, 0.9),
+      0 0 70px rgba(0, 200, 255, 0.18);
   }
 
-  .improved-text h2 {
-    font-size: 2rem;
+  .croc-ar-meta-pill {
+    padding: 6px 12px;
   }
 
-  .details-toggle-btn {
-    padding: 10px 18px;
+  .croc-ar-meta-title {
+    font-size: 0.74rem;
   }
 
-  .view-img-btn,
-  .back-gallery-btn {
-    padding: 12px 20px;
+  .croc-ar-meta-year {
+    font-size: 0.74rem;
+  }
+}
+
+@media (max-width: 480px) {
+  .croc-ar-canvas-shell {
+    border-radius: 18px;
+  }
+
+  .croc-ar-hud-btn {
+    width: 36px;
+    height: 36px;
+  }
+
+  .croc-ar-meta-pill {
+    max-width: 60%;
+    justify-content: center;
+    text-align: center;
   }
 }

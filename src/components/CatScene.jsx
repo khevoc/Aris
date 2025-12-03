@@ -8,6 +8,7 @@ import catImg from "../assets/cat.jpg";
 import catAImg from "../assets/cat2.jpg";
 import { Icons } from "./ui/Icons";
 
+
 export default function CatScene() {
   const containerRef = useRef(null);
 

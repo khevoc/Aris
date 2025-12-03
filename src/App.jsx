@@ -5,7 +5,7 @@ import ScrollToTop from "./components/ScrollToTop";
 import AssistButton from "./components/AssistButton";
 import Footer from "./components/Footer";
 
-import CrocodileExperience from "./pages/CrocodileExperience"
+import CrocodileScene from "./components/CrocodileScene"
 import NightVision from "./components/CatScene"
 
 import MaintenanceModal from "./components/MaintenanceModal";
@@ -21,7 +21,7 @@ export default function App() {
     <AssistButton />
       <Routes>
         <Route path="/" element={<Gallery />} />
-        <Route path="/croco-experience" element={<CrocodileExperience />} />
+        <Route path="/croco-experience" element={<CrocodileScene />} />
         <Route path="/night-vision" element={<NightVision />} />
         <Route path="/store" element={<MaintenanceModal />} />
       </Routes>

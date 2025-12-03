@@ -34,8 +34,7 @@ export default function ArtworkDisplay({ artwork }) {
           {/* Información */}
           <div className='artwork-meta'>
             <h2 className='artwork-title'>{artwork.title}</h2>
-            <p className='artwork-desc'>{artwork.description}</p>
-            <p className='artwork-author'>{artwork.author}</p>
+            <p className='artwork-desc'>{artwork.description}</p>            
 
             {/* Botón para experiencias como Crocodile Experience */}
             {artwork.link && (

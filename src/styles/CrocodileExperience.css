@@ -1,208 +1,205 @@
-/* ============================================================
-   BACKGROUND — MOVIMIENTO SUAVE + MENOS BRILLO EN MÓVIL
-============================================================ */
+/* ==========================================================================
+   CROCODILE MUSEUM MODE — GALLERY EXPERIENCE
+   ========================================================================== */
 
-.bg-container {
-  position: fixed;
-  inset: 0;
-  overflow: hidden;
-  z-index: -2;
-}
-
-.bg-video {
+.croc-museum-root {
   width: 100%;
-  height: 100%;
-  object-fit: cover;
-  filter: brightness(0.75) contrast(1.05) saturate(1.15);
-  transition: filter 0.4s ease;
+  min-height: 100vh;
+  padding: 20px;
+  box-sizing: border-box;
+
+  display: flex;
+  align-items: center;
+  justify-content: center;
+
+  background:
+    radial-gradient(circle at 10% 0%, rgba(25, 37, 68, 0.85), transparent 55%),
+    radial-gradient(circle at 90% 100%, rgba(73, 51, 34, 0.8), #020307 80%);
+  color: #f7f7f7;
+  font-family: "Inter", system-ui, -apple-system, sans-serif;
 }
 
-/* Reducir brillo automáticamente en móviles */
-@media (max-width: 600px) {
-  .bg-video {
-    filter: brightness(0.55) contrast(1.05) saturate(1.1);
-  }
+.croc-museum-canvas-shell {
+  position: relative;
+  width: 100%;
+  max-width: 1000px;
+  aspect-ratio: 16 / 9;
+
+  border-radius: 30px;
+  overflow: hidden;
+
+  background: radial-gradient(circle at 50% 0%, #080a12, #050509 78%);
+  box-shadow:
+    0 36px 90px rgba(0, 0, 0, 0.95),
+    0 0 120px rgba(0, 0, 0, 0.8);
 }
 
-/* Resplandor solar mejorado */
-.sun-glow {
+/* HUD superior */
+.croc-museum-hud {
   position: absolute;
-  top: -20%;
-  left: -20%;
-  width: 70%;
-  height: 70%;
-  background: radial-gradient(
-    circle,
-    rgba(255, 230, 160, 0.55),
-    transparent 70%
-  );
-  opacity: 0.5;
-  filter: blur(90px);
+  inset: 14px 16px auto 16px;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  z-index: 10;
   pointer-events: none;
-  animation: sunPulse 6s ease-in-out infinite alternate;
 }
 
-@keyframes sunPulse {
-  0%   { opacity: 0.35; transform: scale(0.95); }
-  50%  { opacity: 0.6;  transform: scale(1.05); }
-  100% { opacity: 0.35; transform: scale(0.95); }
-}
+.croc-museum-icon-btn {
+  pointer-events: auto;
+  border: none;
+  outline: none;
 
+  width: 42px;
+  height: 42px;
+  border-radius: 999px;
 
-/* ============================================================
-   GLASS BUTTONS — CRISTAL PREMIUM + EFECTO LUZ SUAVE
-============================================================ */
+  display: flex;
+  align-items: center;
+  justify-content: center;
 
-.env-button {
-  padding: 12px 22px;
-  font-size: 15px;
-  font-weight: 600;
-  border-radius: 14px;
+  background: radial-gradient(circle at 30% 0%, rgba(255, 255, 255, 0.28), rgba(16, 16, 26, 0.95));
+  color: #ffffff;
   cursor: pointer;
 
-  background: rgba(255, 255, 255, 0.15);
-  border: 1px solid rgba(255, 255, 255, 0.35);
-  color: #ffffff;
+  box-shadow:
+    0 0 0 1px rgba(255, 255, 255, 0.14),
+    0 10px 26px rgba(0, 0, 0, 0.8);
 
-  backdrop-filter: blur(10px) saturate(1.4);
-  -webkit-backdrop-filter: blur(10px) saturate(1.4);
+  transition: transform 0.18s ease, box-shadow 0.18s ease, background 0.18s ease;
+}
+
+.croc-museum-icon-btn:hover {
+  transform: translateY(-1px) scale(1.03);
+  box-shadow:
+    0 0 0 1px rgba(255, 255, 255, 0.2),
+    0 14px 32px rgba(0, 0, 0, 0.9);
+}
+
+.croc-museum-icon-btn.is-on {
+  background: radial-gradient(circle at 25% 0%, rgba(0, 255, 198, 0.55), rgba(5, 18, 20, 0.95));
+  box-shadow:
+    0 0 18px rgba(0, 255, 198, 0.7),
+    0 14px 32px rgba(0, 0, 0, 0.9);
+}
+
+/* Etiqueta de obra */
+.croc-museum-label {
+  pointer-events: none;
+  padding: 10px 16px 10px 18px;
+  border-radius: 999px;
+
+  display: flex;
+  flex-direction: column;
+  gap: 2px;
+
+  background: rgba(6, 10, 20, 0.9);
+  border: 1px solid rgba(255, 255, 255, 0.12);
+  backdrop-filter: blur(18px);
 
   box-shadow:
-    inset 0 0 12px rgba(255, 255, 255, 0.2),
-    0 4px 14px rgba(0,0,0,0.35);
-
-  transition: 0.25s ease;
+    0 16px 40px rgba(0, 0, 0, 0.85),
+    inset 0 0 30px rgba(255, 255, 255, 0.04);
 }
 
-.env-button:hover {
-  background: rgba(255, 255, 255, 0.26);
-  transform: translateY(-2px);
-  box-shadow:
-    inset 0 0 18px rgba(255,255,255,0.32),
-    0 6px 18px rgba(0,0,0,0.4);
+.croc-museum-title-line {
+  display: flex;
+  align-items: baseline;
+  gap: 6px;
 }
 
-.env-button:active {
-  transform: translateY(1px);
-  box-shadow:
-    inset 0 0 8px rgba(255,255,255,0.18),
-    0 3px 8px rgba(0,0,0,0.35);
-}
-
-
-/* ============================================================
-   TEXT PRESENTATION — EDITORIAL GALLERY STYLE
-============================================================ */
-
-.text-block {
-  width: 90%;
-  max-width: 900px;
-  margin: 2.5rem auto 1.5rem;
-  padding: 1.4rem 1.8rem;
-
-  background: rgba(0,0,0,0.45);
-  border-radius: 16px;
-  border: 1px solid rgba(255,255,255,0.12);
-  backdrop-filter: blur(8px);
-  -webkit-backdrop-filter: blur(8px);
-
-  box-shadow: 0 15px 40px rgba(0, 0, 0, 0.3);
-
-  animation: fadeInUp 0.8s ease forwards;
-  opacity: 0;
-}
-
-@keyframes fadeInUp {
-  from { opacity: 0; transform: translateY(10px); }
-  to   { opacity: 1; transform: translateY(0); }
-}
-
-.text-block h1,
-.text-block h2 {
+.croc-museum-title {
   font-family: "Playfair Display", "Times New Roman", serif;
-  font-size: 2.3rem;
-  letter-spacing: 0.5px;
-  font-weight: 400;
-  margin-bottom: 0.5rem;
-  background: linear-gradient(90deg, #fff, #d8d8d8);
-  -webkit-background-clip: text;
-  -webkit-text-fill-color: transparent;
-}
-
-.text-block .subtitle {
-  font-size: 1.2rem;
-  color: #cfcfcf;
-  margin-bottom: 1rem;
-  opacity: 0.9;
-}
-
-.text-block .paragraph {
   font-size: 1.05rem;
-  line-height: 1.6;
-  opacity: 0.85;
-  color: #e4e4e4;
+  letter-spacing: 0.04em;
 }
 
-.text-block strong {
-  color: #ffffff;
-  font-weight: 600;
+.croc-museum-year {
+  font-size: 0.82rem;
+  opacity: 0.8;
 }
 
-
-/* ============================================================
-   DIVIDER — LÍNEA MINIMALISTA, LUMINOSIDAD CONTROLADA
-============================================================ */
-
-.divider-glow {
-  width: 100%;
-  height: 3px;
-  margin: 1.6rem 0;
-  border-radius: 3px;
-
-  background: linear-gradient(90deg, #00ffc6, #0090ff, #00ffc6);
-
-  animation: dividerPulse 4s ease-in-out infinite;
-  opacity: 0.7;
+.croc-museum-medium {
+  font-size: 0.78rem;
+  opacity: 0.8;
 }
 
-@keyframes dividerPulse {
-  0%   { filter: brightness(0.7); }
-  50%  { filter: brightness(1.3); }
-  100% { filter: brightness(0.7); }
+/* Plaquita dentro del canvas (Html) */
+.croc-museum-plaque {
+  pointer-events: none;
 }
 
+.croc-museum-plaque-inner {
+  padding: 10px 16px;
+  border-radius: 14px;
 
-/* ============================================================
-   MOBILE OPTIMIZATION — MENOS INTENSIDAD VISUAL
-============================================================ */
+  background: rgba(12, 14, 22, 0.9);
+  border: 1px solid rgba(255, 255, 255, 0.16);
+  color: rgba(240, 240, 244, 0.96);
 
-@media (max-width: 600px) {
+  font-size: 0.9rem;
+  line-height: 1.4;
 
-  .text-block {
-    padding: 1.2rem 1.4rem;
-    background: rgba(0,0,0,0.55); 
+  box-shadow:
+    0 18px 40px rgba(0, 0, 0, 0.9),
+    inset 0 0 24px rgba(255, 255, 255, 0.05);
+}
+
+.croc-museum-plaque-sub {
+  font-size: 0.8rem;
+  opacity: 0.82;
+  margin-top: 2px;
+}
+
+/* ------------------------------- RESPONSIVE ------------------------------- */
+
+@media (max-width: 900px) {
+  .croc-museum-root {
+    padding: 14px;
   }
 
-  .text-block h1,
-  .text-block h2 {
-    font-size: 1.7rem;
+  .croc-museum-canvas-shell {
+    border-radius: 24px;
   }
 
-  .text-block .subtitle {
-    font-size: 1.05rem;
+  .croc-museum-label {
+    padding: 8px 14px;
   }
 
-  .text-block .paragraph {
-    font-size: 0.95rem;
+  .croc-museum-title {
+    font-size: 0.98rem;
+  }
+}
+
+@media (max-width: 640px) {
+  .croc-museum-root {
+    padding: 10px;
   }
 
-  .divider-glow {
-    opacity: 0.55;
+  .croc-museum-canvas-shell {
+    border-radius: 20px;
+    aspect-ratio: 4 / 3;
   }
 
-  .env-button {
-    padding: 10px 18px;
-    border-radius: 12px;
-    font-size: 14px;
+  .croc-museum-icon-btn {
+    width: 38px;
+    height: 38px;
+  }
+
+  .croc-museum-label {
+    max-width: 62%;
+  }
+
+  .croc-museum-title {
+    font-size: 0.9rem;
+  }
+
+  .croc-museum-medium {
+    font-size: 0.74rem;
+  }
+
+  .croc-museum-plaque-inner {
+    padding: 8px 12px;
+    font-size: 0.82rem;
   }
 }
