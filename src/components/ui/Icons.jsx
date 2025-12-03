@@ -40,7 +40,8 @@ import {
   Image,
   ShoppingBagIcon,
   Linkedin,
-
+  AlbumIcon,
+  DoorOpenIcon,
 
 
 } from "lucide-react";
@@ -165,6 +166,8 @@ export const Icons = {
   instagram: make(Instagram, "minimal"),
   linkedin: make(Linkedin, "minimal"),
   shoppingBag: make(ShoppingBagIcon, "minimal"),
+  album: make(AlbumIcon, "minimal"),
+  doorOpen: make(DoorOpenIcon, "minimal"),
 
 };
 

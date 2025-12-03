@@ -27,7 +27,7 @@ export default function AssistButton() {
         </button>
 
         <button className="assist-bubble" onClick={() => go("/store")}>
-          <Icons.mail size={20} />
+          <Icons.album size={20} />
         </button>
 
       </div>
