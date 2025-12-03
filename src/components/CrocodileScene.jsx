@@ -575,6 +575,7 @@ export default function CrocodileScene_AR({
           camera={{ position: [0.6, 0.3, 6.4], fov: 45 }}
           dpr={[1, 1.8]}
           gl={{ antialias: true, powerPreference: "high-performance" }}
+          style={{ height: "90%" }}
         >
           <color attach="background" args={["#02040a"]} />
           <fog attach="fog" args={["#02040a", 4, 14]} />
@@ -597,7 +598,7 @@ export default function CrocodileScene_AR({
               className="croc-ar-caption"
             >
               <div className="croc-ar-caption-inner">
-                <span>Drag / tilt to explore</span>
+                <span>Drag to explore</span>
               </div>
             </Html>
           </Suspense>
