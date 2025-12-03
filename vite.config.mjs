@@ -12,5 +12,11 @@ export default defineConfig({
     outDir: 'dist',
   },
   resolve: { alias: { '@': '/src' } }
+  },
+  optimizeDeps: {
+    include: ["three", "three/webgpu"],
+  },
+  build: {
+    target: "esnext"
   }
 })
