@@ -12,6 +12,7 @@ const ARTWORKS = [
     image: "/paintings/aoki.jpg",
     effects: ["/effects/aura.png", "/effects/brush1.png", "/effects/spark.png"],
     description: "Acrylic on Canvas — 2024",
+    isUpcoming: true,
   },
   {
     id: 2,
@@ -84,7 +85,7 @@ export default function Gallery() {
               key={a.id}
               className={`thumb ${i === index ? "active" : ""}`}
               onClick={() => setIndex(i)}
-            >
+            >              
               <img src={a.image} alt={a.title} />
             </button>
           ))}

@@ -5,6 +5,15 @@ import { Icons } from "../components/ui/Icons";
 import SurroundingElements from './SurroundingElements'
 import '../styles/ArtworkDisplay.css'
 
+const OldSchoolText = ({ text }) => {
+    return (
+        <div className="old-school-terminal">
+            <span className="typewriter-text">{text}</span>
+            <span className="typewriter-cursor">|</span>
+        </div>
+    );
+}
+
 export default function ArtworkDisplay({ artwork }) {
   if (!artwork) return null
 
@@ -42,6 +51,7 @@ export default function ArtworkDisplay({ artwork }) {
                 Enter to Experience <Icons.rightSoft style={{ display: "inline"}} />
               </Link>
             )}
+            {artwork.isUpcoming ? (<OldSchoolText text="updates soon..." />) : ("")}
           </div>
         </motion.div>
       </AnimatePresence>

@@ -1,155 +1,205 @@
-// src/components/ZoomViewer.jsx
-import React, { useRef, useState, useEffect } from "react";
+// src/pages/CatalogPage.jsx
+import React, { useState, useEffect } from "react";
+import CatalogItemCard from "../components/CatalogItemCard";
+import ZoomViewer from "../components/ZoomViewer";
+import { Icons } from "../components/ui/Icons";
+import "../styles/CatalogPage.css";
 
-export default function ZoomViewer({ src, onClose }) {
-  const wrapperRef = useRef(null);
-  const imgRef = useRef(null);
+export default function CatalogPage() {
+  const [items, setItems] = useState([]);
+  const [filtered, setFiltered] = useState([]);
+  const [loading, setLoading] = useState(true);
 
-  const [scale, setScale] = useState(1);
-  const [origin, setOrigin] = useState({ x: 0, y: 0 });
-  const [offset, setOffset] = useState({ x: 0, y: 0 });
+  const [search, setSearch] = useState("");
+  const [category, setCategory] = useState("all");
 
-  const lastTouch = useRef(null);
-  const pinchStart = useRef(null);
+  const [selectedItem, setSelectedItem] = useState(null);
+  const [zoomImg, setZoomImg] = useState(null);
 
-  /* ---------------------------------------------------------
-     Prevent ESC → close
-  --------------------------------------------------------- */
-  useEffect(() => {
-    const handleEsc = e => {
-      if (e.key === "Escape") onClose();
-    };
-    window.addEventListener("keydown", handleEsc);
-    return () => window.removeEventListener("keydown", handleEsc);
-  }, [onClose]);
+  /* ======================================================
+     📌 1. CSV PARSER SEGURO (soporta comas dentro de texto)
+     ====================================================== */
+  function parseCSVLine(line) {
+    const result = [];
+    let current = "";
+    let insideQuotes = false;
 
-  /* ---------------------------------------------------------
-     Desktop wheel zoom
-  --------------------------------------------------------- */
-  const handleWheel = (e) => {
-    e.preventDefault();
-    const delta = e.deltaY * -0.002;
-    const newScale = Math.min(Math.max(1, scale + delta), 4);
-    setScale(newScale);
-  };
+    for (let i = 0; i < line.length; i++) {
+      const c = line[i];
 
-  /* ---------------------------------------------------------
-     Drag (desktop + touch)
-  --------------------------------------------------------- */
-  const handlePointerDown = (e) => {
-    wrapperRef.current.setPointerCapture(e.pointerId);
-    lastTouch.current = { x: e.clientX, y: e.clientY };
-  };
-
-  const handlePointerMove = (e) => {
-    if (!lastTouch.current) return;
-
-    const dx = e.clientX - lastTouch.current.x;
-    const dy = e.clientY - lastTouch.current.y;
-
-    lastTouch.current = { x: e.clientX, y: e.clientY };
-
-    // pan only if zoomed
-    if (scale > 1) {
-      setOffset(prev => ({
-        x: prev.x + dx,
-        y: prev.y + dy
-      }));
+      if (c === '"' && line[i + 1] !== '"') {
+        insideQuotes = !insideQuotes;
+        continue;
+      }
+      if (c === "," && !insideQuotes) {
+        result.push(current);
+        current = "";
+        continue;
+      }
+      current += c;
     }
-  };
 
-  const handlePointerUp = () => {
-    lastTouch.current = null;
-  };
+    result.push(current);
+    return result.map((x) => x.trim());
+  }
 
-  /* ---------------------------------------------------------
-     Pinch to zoom (mobile multitouch)
-  --------------------------------------------------------- */
-  const distance = (t1, t2) =>
-    Math.hypot(t2.clientX - t1.clientX, t2.clientY - t1.clientY);
+  /* ======================================================
+     📌 2. LOAD CSV
+     ====================================================== */
+  useEffect(() => {
+    async function loadData() {
+      try {
+        const res = await fetch("/catalog/data.csv");
+        const csv = await res.text();
 
-  const handleTouchMove = (e) => {
-    if (e.touches.length === 2) {
-      const [t1, t2] = e.touches;
+        const lines = csv.trim().split("\n");
+        const headers = lines[0].split(",");
 
-      if (!pinchStart.current) {
-        pinchStart.current = {
-          distance: distance(t1, t2),
-          scale
-        };
-      } else {
-        const newDist = distance(t1, t2);
-        const factor = newDist / pinchStart.current.distance;
+        const parsed = lines.slice(1).map((line) => {
+          const cols = parseCSVLine(line);
+          return {
+            id: cols[0],
+            category: cols[1],
+            name: cols[2],
+            image: cols[3],
+            description: cols[4],
+            year: cols[5],
+            support: cols[6],
+            technique: cols[7],
+            size: cols[8],
+          };
+        });
 
-        let newScale = pinchStart.current.scale * factor;
-        newScale = Math.min(Math.max(1, newScale), 4);
-
-        setScale(newScale);
+        setTimeout(() => {
+          setItems(parsed);
+          setFiltered(parsed);
+          setLoading(false);
+        }, 350);
+      } catch (err) {
+        console.error("Error loading CSV:", err);
       }
     }
-  };
 
-  const endPinch = () => {
-    pinchStart.current = null;
-  };
-
-  /* ---------------------------------------------------------
-     Reset zoom when closing
-  --------------------------------------------------------- */
-  useEffect(() => {
-    return () => {
-      setScale(1);
-      setOffset({ x: 0, y: 0 });
-      pinchStart.current = null;
-      lastTouch.current = null;
-    };
+    loadData();
   }, []);
 
-  /* ---------------------------------------------------------
-     Render
-  --------------------------------------------------------- */
+  /* ======================================================
+     📌 3. FILTROS
+     ====================================================== */
+  useEffect(() => {
+    let result = [...items];
+
+    if (category !== "all") {
+      result = result.filter((i) => i.category === category);
+    }
+
+    if (search.trim() !== "") {
+      result = result.filter((i) =>
+        i.name.toLowerCase().includes(search.toLowerCase())
+      );
+    }
+
+    setFiltered(result);
+  }, [search, category, items]);
+
+  /* ======================================================
+     📌 4. BOTONES DE FILTRO (chips)
+     ====================================================== */
+  const categories = [
+    { key: "all", label: "All" },
+    { key: "painting", label: "Painting" },
+    { key: "illustration", label: "Illustration" },
+    { key: "digital", label: "Digital" },
+    { key: "mixed", label: "Mixed" },
+  ];
+
   return (
-    <div className="zoom-overlay" onClick={onClose}>
-      <div
-        className="zoom-box"
-        ref={wrapperRef}
-        onClick={(e) => e.stopPropagation()}
-        onWheel={handleWheel}
-        onPointerDown={handlePointerDown}
-        onPointerMove={handlePointerMove}
-        onPointerUp={handlePointerUp}
-        onTouchMove={handleTouchMove}
-        onTouchEnd={endPinch}
-        onTouchCancel={endPinch}
-      >
-        <button
-          className="zoom-close-btn"
-          onClick={onClose}
-        >
-          ✕
-        </button>
+    <div className="catalog-page">
 
-        <div className="zoom-img-wrapper">
-          <img
-            ref={imgRef}
-            src={src}
-            alt=""
-            className="zoom-img"
-            draggable="false"
-            onContextMenu={(e) => e.preventDefault()}
-            style={{
-              transform: `
-                translate(${offset.x}px, ${offset.y}px)
-                scale(${scale})
-              `
-            }}
-          />
+      {/* HEADER */}
+      <header className="catalog-header">
+        <h1 className="catalog-title">Digital Catalog</h1>
+        <p className="catalog-sub">Explore the artwork collection</p>
+      </header>
+
+      {/* FILTER BAR */}
+      <div className="filter-bar">
+        <div className="chip-container">
+          {categories.map((cat) => (
+            <button
+              key={cat.key}
+              className={`chip ${category === cat.key ? "active" : ""}`}
+              onClick={() => setCategory(cat.key)}
+            >
+              {cat.label}
+            </button>
+          ))}
         </div>
 
-        <div className="zoom-info">
-          <p>{scale > 1 ? "Drag / pinch to explore" : "Pinch or scroll to zoom"}</p>
-        </div>
+        <input
+          type="text"
+          placeholder="Search artwork..."
+          className="catalog-search"
+          value={search}
+          onChange={(e) => setSearch(e.target.value)}
+        />
       </div>
+
+      {/* MASONRY GRID */}
+      <div className="masonry-grid">
+        {loading
+          ? [...Array(8)].map((_, i) => (
+              <div key={i} className="skeleton-card">
+                <div className="skeleton-img" />
+              </div>
+            ))
+          : filtered.map((item) => (
+              <CatalogItemCard
+                key={item.id}
+                item={item}
+                onOpen={() => setSelectedItem(item)}
+                onZoom={() => setZoomImg(item.image)}
+              />
+            ))}
+      </div>
+
+      {/* DETAILS MODAL */}
+      {selectedItem && (
+        <div className="detail-modal-overlay" onClick={() => setSelectedItem(null)}>
+          <div className="detail-modal" onClick={(e) => e.stopPropagation()}>
+            
+            <img
+              src={selectedItem.image}
+              className="detail-img"
+              alt={selectedItem.name}
+              draggable="false"
+              onContextMenu={(e) => e.preventDefault()}
+            />
+
+            <div className="detail-info">
+              <h2>{selectedItem.name}</h2>
+              <span className="detail-year">{selectedItem.year}</span>
+              <p className="detail-description">{selectedItem.description}</p>
+
+              <div className="detail-list">
+                <p><strong>Support:</strong> {selectedItem.support}</p>
+                <p><strong>Technique:</strong> {selectedItem.technique}</p>
+                <p><strong>Size:</strong> {selectedItem.size}</p>
+              </div>
+              <button className="catalog-card-zoom" onClick={() => setZoomImg(selectedItem.image)}>
+                <Icons.camera size={18} />
+              </button>
+            </div>
+
+            <button className="zoom-close-btn" onClick={() => setSelectedItem(null)}>
+              ✕
+            </button>
+          </div>
+        </div>
+      )}
+
+      {/* PINCH-TO-ZOOM MODAL */}
+      {zoomImg && <ZoomViewer src={zoomImg} onClose={() => setZoomImg(null)} />}
     </div>
   );
 }

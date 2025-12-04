@@ -41,13 +41,8 @@ export default function CatalogItemCard({ item, onOpen, onZoom }) {
 
       <div className="catalog-card-info">
         <div>
-          <p className="catalog-card-title">{item.name}</p>
-          <p className="catalog-card-year">{item.year}</p>
-        </div>
-
-        <button className="catalog-card-zoom" onClick={onZoom}>
-          <Camera size={18} />
-        </button>
+          <p className="catalog-card-title">{item.name} - <span className="catalog-card-year">{item.year}</span></p>
+        </div>        
       </div>
     </div>
   );

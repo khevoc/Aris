@@ -317,6 +317,7 @@
   border-radius: 20px;
   background: #05070d;
   user-select: none;
+  pointer-events: none;
 }
 
 .detail-info {
@@ -488,6 +489,85 @@
   opacity: 0.75;
   border-top: 1px solid rgba(255, 255, 255, 0.12);
 }
+
+/* =============================== */
+/*  CATALOG CARD — TEXT FOOTER    */
+/* =============================== */
+
+.catalog-card-info {
+  width: 100%;
+  padding: 10px 12px;
+  margin-top: 6px;
+
+  background: rgba(0, 0, 0, 0.35);
+  backdrop-filter: blur(12px);
+
+  border-radius: 12px;
+  border: 1px solid rgba(255, 255, 255, 0.10);
+
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+
+  transition: 0.25s ease;
+}
+
+/* En hover ilumina sutilmente */
+.catalog-item:hover .catalog-card-info {
+  background: rgba(0, 0, 0, 0.48);
+  border-color: rgba(255, 255, 255, 0.18);
+  transform: translateY(-2px);
+}
+
+/* Título */
+.catalog-card-title {
+  font-size: 0.95rem;
+  font-weight: 600;
+  letter-spacing: 0.02em;
+  
+  color: #f0f0f0;
+  opacity: 0.9;
+
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+
+  transition: opacity 0.2s ease;
+}
+
+.catalog-item:hover .catalog-card-title {
+  opacity: 1;
+}
+
+/* Año */
+.catalog-card-year {
+  font-size: 0.78rem;
+  font-weight: 500;
+  opacity: 0.75;
+  color: #d5eaff;
+  padding-left: 8px;
+}
+
+/* =============================== */
+/*      RESPONSIVE MOBILE         */
+/* =============================== */
+
+@media (max-width: 600px) {
+  .catalog-card-info {
+    padding: 8px 10px;
+    margin-top: 4px;
+    border-radius: 10px;
+  }
+
+  .catalog-card-title {
+    font-size: 0.9rem;
+  }
+
+  .catalog-card-year {
+    font-size: 0.75rem;
+  }
+}
+
 
 /* ==========================================================================
    RESPONSIVE

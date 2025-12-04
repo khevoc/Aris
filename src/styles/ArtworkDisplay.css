@@ -107,6 +107,64 @@
   opacity: 0.65;
 }
 
+/* Texto coming soon */
+.old-school-terminal {
+    /* Estilos de fuente y fondo de terminal */
+    font-family: 'Consolas', 'Monaco', 'Courier New', monospace; /* Fuente de aspecto antiguo */
+    color: #00ff00; /* Típico color verde de terminal */
+    background-color: #000000;
+    padding: 5px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    overflow: hidden; /* Oculta el texto que se "escribe" */
+    white-space: nowrap;
+    font-size: 14px; /* Ajusta según el tamaño de tu miniatura */
+    line-height: 1.2;
+}
+
+/* 2. El texto que se animará (simulando la escritura) */
+.typewriter-text {
+    /* El número de pasos debe coincidir con el número de caracteres */
+    /* "updates soon..." tiene 15 caracteres (incluyendo espacios) */
+    width: 0;
+    overflow: hidden;
+    /* La animación simula escribir el texto de izquierda a derecha */
+    animation: typing 3.5s steps(15, end) forwards; /* 3.5s para la escritura */
+}
+
+/* 3. El cursor parpadeante */
+.typewriter-cursor {
+    /* Inicialmente oculto para que solo aparezca después de la escritura */
+    opacity: 0;
+    /* Animación de parpadeo del cursor */
+    animation: 
+        blink-cursor 0.75s step-end infinite,
+        /* Retardo para que el cursor empiece a parpadear solo al final de la escritura */
+        show-cursor 0.1s 3.5s forwards; 
+        
+}
+
+/* --- Keyframes (Animaciones) --- */
+
+/* Animación de "escritura" */
+@keyframes typing {
+    from { width: 0 }
+    to { width: 100% } /* El ancho final debe ser suficiente para mostrar todo el texto */
+}
+
+/* Animación para hacer aparecer el cursor al final */
+@keyframes show-cursor {
+    to { opacity: 1; }
+}
+
+/* Animación de parpadeo */
+@keyframes blink-cursor {
+    from, to { opacity: 0 }
+    50% { opacity: 1 }
+}
+
+
 /* RESPONSIVE */
 @media (max-width: 980px) {
   .artwork-card {

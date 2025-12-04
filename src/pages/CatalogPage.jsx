@@ -2,6 +2,7 @@
 import React, { useState, useEffect } from "react";
 import CatalogItemCard from "../components/CatalogItemCard";
 import ZoomViewer from "../components/ZoomViewer";
+import { Icons } from "../components/ui/Icons";
 import "../styles/CatalogPage.css";
 
 export default function CatalogPage() {
@@ -185,9 +186,12 @@ export default function CatalogPage() {
                 <p><strong>Technique:</strong> {selectedItem.technique}</p>
                 <p><strong>Size:</strong> {selectedItem.size}</p>
               </div>
+              <button className="catalog-card-zoom" onClick={() => setZoomImg(selectedItem.image)}>
+                <Icons.camera size={18} />
+              </button>
             </div>
 
-            <button className="detail-close-btn" onClick={() => setSelectedItem(null)}>
+            <button className="zoom-close-btn" onClick={() => setSelectedItem(null)}>
               ✕
             </button>
           </div>
