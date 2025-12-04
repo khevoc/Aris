@@ -1,205 +1,219 @@
-// src/pages/CatalogPage.jsx
-import React, { useState, useEffect } from "react";
-import CatalogItemCard from "../components/CatalogItemCard";
-import ZoomViewer from "../components/ZoomViewer";
-import { Icons } from "../components/ui/Icons";
-import "../styles/CatalogPage.css";
+import React, { useRef, useState, useEffect } from "react";
 
-export default function CatalogPage() {
-  const [items, setItems] = useState([]);
-  const [filtered, setFiltered] = useState([]);
-  const [loading, setLoading] = useState(true);
+export default function ZoomViewer({ src, onClose }) {
+  const wrapperRef = useRef(null);
+  const imgRef = useRef(null);
 
-  const [search, setSearch] = useState("");
-  const [category, setCategory] = useState("all");
+  /** ZOOM STATE **/
+  const [scale, setScale] = useState(1);
+  const [offset, setOffset] = useState({ x: 0, y: 0 });
 
-  const [selectedItem, setSelectedItem] = useState(null);
-  const [zoomImg, setZoomImg] = useState(null);
+  const [visible, setVisible] = useState(false);
 
-  /* ======================================================
-     📌 1. CSV PARSER SEGURO (soporta comas dentro de texto)
-     ====================================================== */
-  function parseCSVLine(line) {
-    const result = [];
-    let current = "";
-    let insideQuotes = false;
+  /** HELPERS **/
+  const pointerData = useRef({ dragging: false, lastX: 0, lastY: 0 });
+  const pinchData = useRef(null);
+  const tapData = useRef({ lastTap: 0 });
+  const swipeStart = useRef(null);
 
-    for (let i = 0; i < line.length; i++) {
-      const c = line[i];
-
-      if (c === '"' && line[i + 1] !== '"') {
-        insideQuotes = !insideQuotes;
-        continue;
-      }
-      if (c === "," && !insideQuotes) {
-        result.push(current);
-        current = "";
-        continue;
-      }
-      current += c;
-    }
-
-    result.push(current);
-    return result.map((x) => x.trim());
-  }
-
-  /* ======================================================
-     📌 2. LOAD CSV
-     ====================================================== */
+  /* -------------------------------------------------------------------
+     MOUNT → Fade in + lock scroll
+  ------------------------------------------------------------------- */
   useEffect(() => {
-    async function loadData() {
-      try {
-        const res = await fetch("/catalog/data.csv");
-        const csv = await res.text();
+    document.body.style.overflow = "hidden";
+    setTimeout(() => setVisible(true), 10);
 
-        const lines = csv.trim().split("\n");
-        const headers = lines[0].split(",");
-
-        const parsed = lines.slice(1).map((line) => {
-          const cols = parseCSVLine(line);
-          return {
-            id: cols[0],
-            category: cols[1],
-            name: cols[2],
-            image: cols[3],
-            description: cols[4],
-            year: cols[5],
-            support: cols[6],
-            technique: cols[7],
-            size: cols[8],
-          };
-        });
-
-        setTimeout(() => {
-          setItems(parsed);
-          setFiltered(parsed);
-          setLoading(false);
-        }, 350);
-      } catch (err) {
-        console.error("Error loading CSV:", err);
-      }
-    }
-
-    loadData();
+    return () => (document.body.style.overflow = "auto");
   }, []);
 
-  /* ======================================================
-     📌 3. FILTROS
-     ====================================================== */
+  /* -------------------------------------------------------------------
+     Close viewer with animation
+  ------------------------------------------------------------------- */
+  const closeViewer = () => {
+    setVisible(false);
+    setTimeout(onClose, 150);
+  };
+
+  /* -------------------------------------------------------------------
+     ESC Key closes
+  ------------------------------------------------------------------- */
   useEffect(() => {
-    let result = [...items];
+    const handler = (e) => e.key === "Escape" && closeViewer();
+    window.addEventListener("keydown", handler);
+    return () => window.removeEventListener("keydown", handler);
+  }, []);
 
-    if (category !== "all") {
-      result = result.filter((i) => i.category === category);
+  /* -------------------------------------------------------------------
+     DOUBLE TAP ZOOM (iOS style)
+  ------------------------------------------------------------------- */
+  const handleTap = (e) => {
+    const now = Date.now();
+    if (now - tapData.current.lastTap < 250) {
+      // Toggle zoom level
+      setScale((prev) => (prev > 1 ? 1 : 2.6));
+      setOffset({ x: 0, y: 0 });
+    }
+    tapData.current.lastTap = now;
+  };
+
+  /* -------------------------------------------------------------------
+     WHEEL ZOOM (desktop) — FIXED (no passive errors)
+  ------------------------------------------------------------------- */
+  const onWheel = (e) => {
+    e.preventDefault(); // Now valid because we attach with passive:false
+
+    const delta = e.deltaY * -0.002;
+    let newScale = scale + delta;
+
+    newScale = Math.max(1, Math.min(4, newScale));
+    setScale(newScale);
+  };
+
+  /* -------------------------------------------------------------------
+     DRAG / PAN
+  ------------------------------------------------------------------- */
+  const onPointerDown = (e) => {
+    pointerData.current.dragging = true;
+    pointerData.current.lastX = e.clientX;
+    pointerData.current.lastY = e.clientY;
+    wrapperRef.current.setPointerCapture(e.pointerId);
+  };
+
+  const onPointerMove = (e) => {
+    if (!pointerData.current.dragging || scale === 1) return;
+
+    const dx = e.clientX - pointerData.current.lastX;
+    const dy = e.clientY - pointerData.current.lastY;
+
+    pointerData.current.lastX = e.clientX;
+    pointerData.current.lastY = e.clientY;
+
+    setOffset((o) => ({
+      x: o.x + dx,
+      y: o.y + dy,
+    }));
+  };
+
+  const onPointerUp = () => {
+    pointerData.current.dragging = false;
+  };
+
+  /* -------------------------------------------------------------------
+     PINCH-TO-ZOOM (mobile)
+  ------------------------------------------------------------------- */
+  const distance = (t1, t2) =>
+    Math.hypot(t2.clientX - t1.clientX, t2.clientY - t1.clientY);
+
+  const onTouchMove = (e) => {
+    if (e.touches.length !== 2) return;
+
+    e.preventDefault(); // Safe because passive:false
+
+    const [t1, t2] = e.touches;
+    const distNow = distance(t1, t2);
+
+    if (!pinchData.current) {
+      pinchData.current = { dist: distNow, startScale: scale };
+      return;
     }
 
-    if (search.trim() !== "") {
-      result = result.filter((i) =>
-        i.name.toLowerCase().includes(search.toLowerCase())
-      );
+    let newScale = (distNow / pinchData.current.dist) * pinchData.current.startScale;
+    newScale = Math.max(1, Math.min(4, newScale));
+    setScale(newScale);
+  };
+
+  const endPinch = () => {
+    pinchData.current = null;
+  };
+
+  /* -------------------------------------------------------------------
+     SWIPE DOWN TO CLOSE (only when zoom = 1)
+  ------------------------------------------------------------------- */
+  const onTouchStart = (e) => {
+    if (e.touches.length === 1 && scale === 1) {
+      swipeStart.current = e.touches[0].clientY;
     }
+  };
 
-    setFiltered(result);
-  }, [search, category, items]);
+  const onTouchEnd = (e) => {
+    if (!swipeStart.current) return;
 
-  /* ======================================================
-     📌 4. BOTONES DE FILTRO (chips)
-     ====================================================== */
-  const categories = [
-    { key: "all", label: "All" },
-    { key: "painting", label: "Painting" },
-    { key: "illustration", label: "Illustration" },
-    { key: "digital", label: "Digital" },
-    { key: "mixed", label: "Mixed" },
-  ];
+    const end = e.changedTouches[0].clientY;
+    if (end - swipeStart.current > 120) {
+      closeViewer();
+    }
+    swipeStart.current = null;
+  };
 
+  /* -------------------------------------------------------------------
+     LIMIT PANNING AREA
+  ------------------------------------------------------------------- */
+  const bounded = {
+    x: Math.max(Math.min(offset.x, 300), -300),
+    y: Math.max(Math.min(offset.y, 300), -300),
+  };
+
+  /* -------------------------------------------------------------------
+     FIX: Attach wheel/touch listeners with passive:false (NO ERRORS)
+  ------------------------------------------------------------------- */
+  useEffect(() => {
+    const box = wrapperRef.current;
+    if (!box) return;
+
+    box.addEventListener("wheel", onWheel, { passive: false });
+    box.addEventListener("touchmove", onTouchMove, { passive: false });
+
+    return () => {
+      box.removeEventListener("wheel", onWheel);
+      box.removeEventListener("touchmove", onTouchMove);
+    };
+  }, [scale]);
+
+  /* -------------------------------------------------------------------
+     RENDER
+  ------------------------------------------------------------------- */
   return (
-    <div className="catalog-page">
+    <div
+      className={`zoom-overlay ${visible ? "visible" : ""}`}
+      onClick={closeViewer}
+    >
+      <div
+        className="zoom-box"
+        ref={wrapperRef}
+        onClick={(e) => e.stopPropagation()}
+        onPointerDown={onPointerDown}
+        onPointerMove={onPointerMove}
+        onPointerUp={onPointerUp}
+        onTouchStart={onTouchStart}
+        onTouchEnd={(e) => {
+          handleTap(e);
+          onTouchEnd(e);
+          endPinch();
+        }}
+      >
+        <button className="zoom-close-btn" onClick={closeViewer}>
+          ✕
+        </button>
 
-      {/* HEADER */}
-      <header className="catalog-header">
-        <h1 className="catalog-title">Digital Catalog</h1>
-        <p className="catalog-sub">Explore the artwork collection</p>
-      </header>
-
-      {/* FILTER BAR */}
-      <div className="filter-bar">
-        <div className="chip-container">
-          {categories.map((cat) => (
-            <button
-              key={cat.key}
-              className={`chip ${category === cat.key ? "active" : ""}`}
-              onClick={() => setCategory(cat.key)}
-            >
-              {cat.label}
-            </button>
-          ))}
+        <div className="zoom-img-wrapper">
+          <img
+            ref={imgRef}
+            src={src}
+            alt=""
+            draggable="false"
+            className="zoom-img"
+            onContextMenu={(e) => e.preventDefault()}
+            style={{
+              transform: `translate(${bounded.x}px, ${bounded.y}px) scale(${scale})`,
+              transition: pointerData.current.dragging ? "none" : "transform 0.12s ease-out",
+            }}
+          />
         </div>
 
-        <input
-          type="text"
-          placeholder="Search artwork..."
-          className="catalog-search"
-          value={search}
-          onChange={(e) => setSearch(e.target.value)}
-        />
+        <p className="zoom-info">
+          {scale === 1 ? "Pinch or scroll to zoom" : "Drag / pinch to explore"}
+        </p>
       </div>
-
-      {/* MASONRY GRID */}
-      <div className="masonry-grid">
-        {loading
-          ? [...Array(8)].map((_, i) => (
-              <div key={i} className="skeleton-card">
-                <div className="skeleton-img" />
-              </div>
-            ))
-          : filtered.map((item) => (
-              <CatalogItemCard
-                key={item.id}
-                item={item}
-                onOpen={() => setSelectedItem(item)}
-                onZoom={() => setZoomImg(item.image)}
-              />
-            ))}
-      </div>
-
-      {/* DETAILS MODAL */}
-      {selectedItem && (
-        <div className="detail-modal-overlay" onClick={() => setSelectedItem(null)}>
-          <div className="detail-modal" onClick={(e) => e.stopPropagation()}>
-            
-            <img
-              src={selectedItem.image}
-              className="detail-img"
-              alt={selectedItem.name}
-              draggable="false"
-              onContextMenu={(e) => e.preventDefault()}
-            />
-
-            <div className="detail-info">
-              <h2>{selectedItem.name}</h2>
-              <span className="detail-year">{selectedItem.year}</span>
-              <p className="detail-description">{selectedItem.description}</p>
-
-              <div className="detail-list">
-                <p><strong>Support:</strong> {selectedItem.support}</p>
-                <p><strong>Technique:</strong> {selectedItem.technique}</p>
-                <p><strong>Size:</strong> {selectedItem.size}</p>
-              </div>
-              <button className="catalog-card-zoom" onClick={() => setZoomImg(selectedItem.image)}>
-                <Icons.camera size={18} />
-              </button>
-            </div>
-
-            <button className="zoom-close-btn" onClick={() => setSelectedItem(null)}>
-              ✕
-            </button>
-          </div>
-        </div>
-      )}
-
-      {/* PINCH-TO-ZOOM MODAL */}
-      {zoomImg && <ZoomViewer src={zoomImg} onClose={() => setZoomImg(null)} />}
     </div>
   );
 }

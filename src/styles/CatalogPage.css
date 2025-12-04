@@ -400,95 +400,78 @@
 /* ==========================================================================
    ZOOM OVERLAY / PINCH-TO-ZOOM (ZoomViewer)
    ========================================================================== */
-
 .zoom-overlay {
   position: fixed;
   inset: 0;
-  background: radial-gradient(circle at 20% 0%, rgba(5, 10, 18, 0.98), rgba(0, 0, 0, 0.96));
-  z-index: 9995;
-
+  background: rgba(0,0,0,0.75);
+  backdrop-filter: blur(6px);
   display: flex;
-  align-items: center;
   justify-content: center;
-  padding: 16px;
+  align-items: center;
+  opacity: 0;
+  transition: opacity .15s ease;
+  z-index: 99999;
+}
 
-  touch-action: none; /* para permitir pinch / pan controlado */
+.zoom-overlay.visible {
+  opacity: 1;
 }
 
 .zoom-box {
   position: relative;
-  width: 100%;
-  max-width: 960px;
-  max-height: 92vh;
-
-  background: rgba(3, 5, 12, 0.98);
-  border-radius: 24px;
-  box-shadow:
-    0 36px 90px rgba(0, 0, 0, 0.98),
-    0 0 60px rgba(110, 220, 255, 0.35);
-
+  max-width: 95vw;
+  max-height: 95vh;
   overflow: hidden;
-  display: flex;
-  flex-direction: column;
+  touch-action: none;
 }
 
 .zoom-close-btn {
   position: absolute;
-  top: 10px;
-  right: 13px;
-
-  width: 32px;
-  height: 32px;
+  top: 12px;
+  right: 12px;
+  background: rgba(255,255,255,0.25);
+  border: none;
+  color: white;
+  padding: 10px 14px;
   border-radius: 999px;
-  border: 1px solid rgba(255, 255, 255, 0.65);
-  background: rgba(10, 12, 20, 0.96);
-
-  color: #ffffff;
+  font-size: 18px;
   cursor: pointer;
-  font-size: 0.9rem;
-  z-index: 2;
-
-  display: flex;
-  align-items: center;
-  justify-content: center;
-
-  transition: transform 0.15s ease, background 0.15s ease, box-shadow 0.15s ease;
+  backdrop-filter: blur(6px);
+  z-index: 1001;
 }
 
 .zoom-close-btn:hover {
-  transform: translateY(-1px);
-  background: rgba(21, 26, 40, 0.98);
-  box-shadow:
-    0 10px 24px rgba(0, 0, 0, 0.9),
-    0 0 18px rgba(255, 255, 255, 0.4);
+  background: rgba(255,255,255,0.35);
 }
 
 .zoom-img-wrapper {
-  flex: 1;
-  overflow: hidden;
-  touch-action: none;
   display: flex;
-  align-items: center;
   justify-content: center;
+  align-items: center;
+  touch-action: none;
 }
 
 .zoom-img {
   max-width: 100%;
-  max-height: 86vh;
-  object-fit: contain;
+  max-height: 100%;
+  will-change: transform;
   user-select: none;
-  pointer-events: none; /* solo movemos el wrapper */
+  pointer-events: none;
 }
 
 .zoom-info {
-  padding: 8px 14px 12px;
+  margin-top: 10px;
   text-align: center;
-  font-size: 0.78rem;
-  letter-spacing: 0.16em;
-  text-transform: uppercase;
-  opacity: 0.75;
-  border-top: 1px solid rgba(255, 255, 255, 0.12);
+  color: rgba(255,255,255,0.8);
+  font-size: 0.85rem;
+  animation: fadeIn .3s ease;
 }
+
+@keyframes fadeIn {
+  from { opacity: 0 }
+  to { opacity: 1 }
+}
+
 
 /* =============================== */
 /*  CATALOG CARD — TEXT FOOTER    */
@@ -537,6 +520,10 @@
 
 .catalog-item:hover .catalog-card-title {
   opacity: 1;
+}
+
+.catalog-card-img{
+    pointer-events: none;
 }
 
 /* Año */
