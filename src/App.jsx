@@ -8,6 +8,8 @@ import Footer from "./components/Footer";
 import CrocodileScene from "./components/CrocodileScene"
 import NightVision from "./components/CatScene"
 
+import Catalog from "./pages/CatalogPage"
+
 import MaintenanceModal from "./components/MaintenanceModal";
 
 import './styles/App.css'
@@ -24,6 +26,7 @@ export default function App() {
         <Route path="/croco-experience" element={<CrocodileScene />} />
         <Route path="/night-vision" element={<NightVision />} />
         <Route path="/store" element={<MaintenanceModal />} />
+        <Route path="/catalog" element={<Catalog />} />
       </Routes>
       <Footer />
     </BrowserRouter>

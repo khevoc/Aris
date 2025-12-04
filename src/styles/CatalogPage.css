@@ -1,0 +1,557 @@
+/* ==========================================================================
+   CATALOG PAGE — IMMERSIVE MASONRY GRID
+   ========================================================================== */
+
+.catalog-page {
+  min-height: 100vh;
+  padding: 72px 24px 48px;
+  box-sizing: border-box;
+
+  display: flex;
+  flex-direction: column;
+  gap: 32px;
+  align-items: center;
+
+  /* Fondo cinematográfico */
+  background:
+    radial-gradient(circle at 10% 0%, rgba(21, 41, 69, 0.95), transparent 60%),
+    radial-gradient(circle at 80% 105%, rgba(183, 109, 72, 0.6), #03030a 80%);
+  color: #f5f5f7;
+  font-family: "Inter", system-ui, -apple-system, BlinkMacSystemFont, sans-serif;
+}
+
+/* Pequeña textura de ruido sutil */
+.catalog-page::before {
+  content: "";
+  position: fixed;
+  inset: 0;
+  pointer-events: none;
+  opacity: 0.16;
+  background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 160 160' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='1.2' numOctaves='3' stitchTiles='noStitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)' opacity='0.35'/%3E%3C/svg%3E");
+  mix-blend-mode: soft-light;
+  z-index: -1;
+}
+
+/* ==========================================================================
+   HEADER
+   ========================================================================== */
+
+.catalog-header {
+  width: 100%;
+  max-width: 1120px;
+  text-align: left;
+}
+
+.catalog-title {
+  font-size: clamp(2.1rem, 3vw, 2.8rem);
+  font-weight: 500;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+
+  background: linear-gradient(90deg, #ffffff, #d3e6ff);
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  margin-bottom: 6px;
+}
+
+.catalog-sub {
+  font-size: 0.98rem;
+  opacity: 0.8;
+}
+
+/* ==========================================================================
+   FILTER BAR
+   ========================================================================== */
+
+.filter-bar {
+  width: 100%;
+  max-width: 1120px;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 16px;
+  flex-wrap: wrap;
+}
+
+/* Chips de categoría */
+.chip-container {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px;
+}
+
+.chip {
+  border: 1px solid rgba(255, 255, 255, 0.24);
+  border-radius: 999px;
+  padding: 6px 14px;
+
+  font-size: 0.82rem;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+
+  background: rgba(7, 10, 20, 0.78);
+  color: rgba(240, 244, 255, 0.86);
+  cursor: pointer;
+
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+
+  transition:
+    background 0.18s ease,
+    border-color 0.18s ease,
+    transform 0.18s ease,
+    box-shadow 0.18s ease;
+}
+
+.chip:hover {
+  transform: translateY(-1px);
+  border-color: rgba(138, 216, 255, 0.7);
+  box-shadow: 0 8px 18px rgba(0, 0, 0, 0.6);
+}
+
+.chip.active {
+  background: radial-gradient(circle at 0% 0%, #35ffd2, #1972ff);
+  color: #020309;
+  border-color: transparent;
+  box-shadow:
+    0 0 18px rgba(47, 255, 219, 0.6),
+    0 10px 28px rgba(0, 0, 0, 0.8);
+}
+
+/* Buscador */
+.catalog-search {
+  flex: 1;
+  min-width: 180px;
+  padding: 10px 14px;
+  border-radius: 999px;
+  border: 1px solid rgba(255, 255, 255, 0.3);
+
+  background: rgba(5, 10, 18, 0.9);
+  color: #f5f5f7;
+
+  font-size: 0.9rem;
+  outline: none;
+
+  box-shadow:
+    0 10px 26px rgba(0, 0, 0, 0.75),
+    inset 0 0 14px rgba(255, 255, 255, 0.05);
+
+  transition: border-color 0.18s ease, box-shadow 0.18s ease, background 0.18s ease;
+}
+
+.catalog-search::placeholder {
+  color: rgba(210, 220, 238, 0.6);
+}
+
+.catalog-search:focus {
+  border-color: rgba(122, 214, 255, 0.9);
+  background: rgba(5, 12, 23, 0.98);
+  box-shadow:
+    0 0 0 1px rgba(156, 229, 255, 0.8),
+    0 16px 34px rgba(0, 0, 0, 0.9);
+}
+
+/* ==========================================================================
+   MASONRY GRID
+   ========================================================================== */
+
+.masonry-grid {
+  width: 100%;
+  max-width: 1120px;
+
+  column-count: 3;
+  column-gap: 1.4rem;
+
+  margin-top: 10px;
+}
+
+/* Cada tarjeta debe evitar cortarse entre columnas */
+.masonry-grid > * {
+  break-inside: avoid;
+  margin-bottom: 1.4rem;
+}
+
+/* ==========================================================================
+   SKELETON LOADING
+   ========================================================================== */
+
+.skeleton-card {
+  width: 100%;
+  border-radius: 18px;
+  overflow: hidden;
+  background: rgba(10, 14, 25, 0.88);
+  box-shadow:
+    0 18px 40px rgba(0, 0, 0, 0.75),
+    0 0 40px rgba(20, 140, 255, 0.12);
+  position: relative;
+}
+
+.skeleton-img {
+  width: 100%;
+  padding-bottom: 130%;
+  background: linear-gradient(
+    110deg,
+    rgba(26, 34, 54, 0.9) 8%,
+    rgba(44, 63, 99, 0.9) 18%,
+    rgba(26, 34, 54, 0.9) 33%
+  );
+  background-size: 200% 100%;
+  animation: skeletonShimmer 1.2s ease-in-out infinite;
+}
+
+@keyframes skeletonShimmer {
+  0% {
+    background-position-x: 180%;
+  }
+  100% {
+    background-position-x: -20%;
+  }
+}
+
+/* ==========================================================================
+   TILT 3D PARA LAS TARJETAS (CatalogItemCard)
+   ========================================================================== */
+
+/* Aseguramos estilos base por si no existen */
+.catalog-card {
+  position: relative;
+  border-radius: 18px;
+  overflow: hidden;
+  background: rgba(8, 12, 22, 0.96);
+  box-shadow:
+    0 18px 40px rgba(0, 0, 0, 0.8),
+    0 0 36px rgba(0, 163, 255, 0.14);
+  transform-style: preserve-3d;
+  transform: perspective(900px) rotateX(0deg) rotateY(0deg);
+  transition:
+    transform 0.18s ease-out,
+    box-shadow 0.18s ease-out,
+    filter 0.18s ease-out;
+}
+
+.catalog-card:hover {
+  transform: perspective(900px) rotateX(4deg) rotateY(-5deg) translateY(-4px);
+  box-shadow:
+    0 26px 60px rgba(0, 0, 0, 0.9),
+    0 0 52px rgba(0, 185, 255, 0.26);
+  filter: brightness(1.04);
+}
+
+/* Por si la tarjeta tiene imagen interior */
+.catalog-card img {
+  display: block;
+  width: 100%;
+  height: auto;
+}
+
+/* Pequeño texto bajo la imagen */
+.catalog-card-footer {
+  padding: 10px 12px 12px;
+  display: flex;
+  flex-direction: column;
+  gap: 2px;
+}
+
+.catalog-card-title {
+  font-size: 0.95rem;
+  font-weight: 500;
+}
+
+.catalog-card-meta {
+  font-size: 0.8rem;
+  opacity: 0.75;
+}
+
+/* ==========================================================================
+   DETAILS MODAL (DISEÑO DE MUSEO)
+   ========================================================================== */
+
+.detail-modal-overlay {
+  position: fixed;
+  inset: 0;
+  background: radial-gradient(circle at 10% 0%, rgba(5, 9, 18, 0.98), rgba(0, 0, 0, 0.94));
+  backdrop-filter: blur(20px);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  z-index: 9990;
+  padding: 24px;
+}
+
+.detail-modal {
+  position: relative;
+  width: 100%;
+  max-width: 920px;
+  max-height: 90vh;
+
+  display: grid;
+  grid-template-columns: minmax(0, 1.2fr) minmax(0, 1fr);
+  gap: 20px;
+
+  background: radial-gradient(circle at 0% 0%, rgba(255, 255, 255, 0.14), rgba(8, 10, 18, 0.97));
+  border-radius: 26px;
+
+  padding: 18px 18px 18px 18px;
+  box-shadow:
+    0 32px 80px rgba(0, 0, 0, 0.95),
+    0 0 60px rgba(80, 200, 255, 0.34);
+
+  overflow: hidden;
+  animation: detailModalIn 0.26s ease-out forwards;
+  opacity: 0;
+  transform: translateY(12px) scale(0.98);
+}
+
+@keyframes detailModalIn {
+  to {
+    opacity: 1;
+    transform: translateY(0) scale(1);
+  }
+}
+
+.detail-img {
+  width: 100%;
+  max-height: 64vh;
+  object-fit: contain;
+  border-radius: 20px;
+  background: #05070d;
+  user-select: none;
+}
+
+.detail-info {
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+  overflow: auto;
+}
+
+.detail-info h2 {
+  font-family: "Playfair Display", serif;
+  font-size: 1.6rem;
+  font-weight: 400;
+}
+
+.detail-year {
+  font-size: 0.86rem;
+  letter-spacing: 0.18em;
+  text-transform: uppercase;
+  opacity: 0.75;
+}
+
+.detail-description {
+  margin-top: 8px;
+  font-size: 0.94rem;
+  line-height: 1.6;
+  opacity: 0.88;
+}
+
+.detail-list {
+  margin-top: 10px;
+  padding-top: 10px;
+  border-top: 1px solid rgba(255, 255, 255, 0.12);
+  display: grid;
+  gap: 6px;
+  font-size: 0.9rem;
+}
+
+.detail-list strong {
+  font-weight: 600;
+}
+
+.detail-close-btn {
+  position: absolute;
+  top: 10px;
+  right: 14px;
+
+  width: 34px;
+  height: 34px;
+  border-radius: 999px;
+  border: 1px solid rgba(255, 255, 255, 0.6);
+  background: rgba(8, 10, 18, 0.96);
+  color: #ffffff;
+  font-size: 1rem;
+  cursor: pointer;
+
+  display: flex;
+  align-items: center;
+  justify-content: center;
+
+  box-shadow:
+    0 10px 26px rgba(0, 0, 0, 0.9),
+    0 0 16px rgba(255, 255, 255, 0.3);
+
+  transition: transform 0.16s ease, background 0.16s ease, box-shadow 0.16s ease;
+}
+
+.detail-close-btn:hover {
+  transform: translateY(-1px);
+  background: rgba(20, 24, 38, 0.98);
+  box-shadow:
+    0 12px 30px rgba(0, 0, 0, 0.95),
+    0 0 24px rgba(255, 255, 255, 0.5);
+}
+
+.detail-close-btn:active {
+  transform: translateY(1px) scale(0.96);
+}
+
+/* ==========================================================================
+   ZOOM OVERLAY / PINCH-TO-ZOOM (ZoomViewer)
+   ========================================================================== */
+
+.zoom-overlay {
+  position: fixed;
+  inset: 0;
+  background: radial-gradient(circle at 20% 0%, rgba(5, 10, 18, 0.98), rgba(0, 0, 0, 0.96));
+  z-index: 9995;
+
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 16px;
+
+  touch-action: none; /* para permitir pinch / pan controlado */
+}
+
+.zoom-box {
+  position: relative;
+  width: 100%;
+  max-width: 960px;
+  max-height: 92vh;
+
+  background: rgba(3, 5, 12, 0.98);
+  border-radius: 24px;
+  box-shadow:
+    0 36px 90px rgba(0, 0, 0, 0.98),
+    0 0 60px rgba(110, 220, 255, 0.35);
+
+  overflow: hidden;
+  display: flex;
+  flex-direction: column;
+}
+
+.zoom-close-btn {
+  position: absolute;
+  top: 10px;
+  right: 13px;
+
+  width: 32px;
+  height: 32px;
+  border-radius: 999px;
+  border: 1px solid rgba(255, 255, 255, 0.65);
+  background: rgba(10, 12, 20, 0.96);
+
+  color: #ffffff;
+  cursor: pointer;
+  font-size: 0.9rem;
+  z-index: 2;
+
+  display: flex;
+  align-items: center;
+  justify-content: center;
+
+  transition: transform 0.15s ease, background 0.15s ease, box-shadow 0.15s ease;
+}
+
+.zoom-close-btn:hover {
+  transform: translateY(-1px);
+  background: rgba(21, 26, 40, 0.98);
+  box-shadow:
+    0 10px 24px rgba(0, 0, 0, 0.9),
+    0 0 18px rgba(255, 255, 255, 0.4);
+}
+
+.zoom-img-wrapper {
+  flex: 1;
+  overflow: hidden;
+  touch-action: none;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.zoom-img {
+  max-width: 100%;
+  max-height: 86vh;
+  object-fit: contain;
+  user-select: none;
+  pointer-events: none; /* solo movemos el wrapper */
+}
+
+.zoom-info {
+  padding: 8px 14px 12px;
+  text-align: center;
+  font-size: 0.78rem;
+  letter-spacing: 0.16em;
+  text-transform: uppercase;
+  opacity: 0.75;
+  border-top: 1px solid rgba(255, 255, 255, 0.12);
+}
+
+/* ==========================================================================
+   RESPONSIVE
+   ========================================================================== */
+
+@media (max-width: 1000px) {
+  .masonry-grid {
+    column-count: 2;
+  }
+
+  .detail-modal {
+    grid-template-columns: minmax(0, 1fr);
+    max-width: 94vw;
+  }
+
+  .detail-img {
+    max-height: 46vh;
+  }
+}
+
+@media (max-width: 700px) {
+  .catalog-page {
+    padding: 60px 14px 32px;
+  }
+
+  .filter-bar {
+    flex-direction: column;
+    align-items: stretch;
+  }
+
+  .chip-container {
+    width: 100%;
+    overflow-x: auto;
+    padding-bottom: 4px;
+  }
+
+  .chip {
+    white-space: nowrap;
+    font-size: 0.78rem;
+  }
+
+  .masonry-grid {
+    column-count: 1;
+  }
+
+  .detail-modal-overlay {
+    padding: 14px;
+  }
+
+  .detail-modal {
+    max-height: 94vh;
+    padding: 14px 14px 16px;
+    border-radius: 20px;
+  }
+
+  .detail-img {
+    max-height: 40vh;
+  }
+
+  .zoom-box {
+    border-radius: 18px;
+  }
+
+  .zoom-img {
+    max-height: 78vh;
+  }
+}

@@ -374,7 +374,8 @@ function VideoBackground() {
       <videoWaveMaterial
         ref={materialRef}
         uTexture={texture}
-        uStrength={0.95}
+        uStrength={0.95}        
+        flipX={true}
       />
     </mesh>
   );
@@ -494,7 +495,7 @@ function CrocodileARWorld() {
 
       <PalmCard
         src={palmImg}
-        position={[-2.4, 2.6, 1.0]}
+        position={[-2.4, 2.9, 1.0]}
         scale={8.8}
         sway={0.035}
       />

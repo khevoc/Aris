@@ -57,6 +57,7 @@
   object-fit: contain;
   z-index: 5;
   transition: transform 0.35s ease;
+  pointer-events: none;
 }
 
 .artwork-image:hover {

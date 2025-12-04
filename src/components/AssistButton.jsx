@@ -26,7 +26,7 @@ export default function AssistButton() {
           <Icons.shoppingBag size={20} />
         </button>
 
-        <button className="assist-bubble" onClick={() => go("/store")}>
+        <button className="assist-bubble" onClick={() => go("/catalog")}>
           <Icons.album size={20} />
         </button>
 

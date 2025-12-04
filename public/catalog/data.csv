@@ -1,0 +1,6 @@
+﻿id,category,name,image,description,year,support,technique,size
+1,painting,Aoki,catalog/photos/aoki.jpg,Blue tree,2024,Canvas,Acrylic,120x80 cm
+2,painting,StormPaw,catalog/photos/stormpaw.jpg,He hates the bag.,2024,Canvas,Acrylic,60x50 cm
+3,painting,Krkavec,catalog/photos/krkavec.jpg,Silence.,2024,Wood Panel,Acrylic,60x50cm
+4,painting,Shiny Clearing,catalog/photos/shinyclearing.jpg,A Pokémon painting.,2025,Canvas,Acrylic,70x50 cm
+5,painting,Dark Void,catalog/photos/darkvoid.jpg,A Pokémon painting.,2025,Canvas,Acrylic,70x50 cm
