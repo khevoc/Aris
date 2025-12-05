@@ -623,6 +623,10 @@
   }
 
    .catalog-title {
-    text-align: center;
-  }
+      text-align: center;
+      padding-left: 25px;
+   }
+   .catalog-sub {
+      text-align: center;
+   }
 }
