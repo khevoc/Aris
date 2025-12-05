@@ -621,4 +621,8 @@
   .zoom-img {
     max-height: 78vh;
   }
+
+   .catalog-title {
+    text-align: center;
+  }
 }
